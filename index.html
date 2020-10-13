@@ -2,28 +2,33 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>Rogue</title>
+        <title>Rogue Game</title>
         <!--<link rel="stylesheet" href="style.css">-->
     </head>
-    <body>
+    <body style="text-align: center;">
         <h1>
             Home Page
         </h1>
-        <form id="login">
+        <!--<form id="login">-->
             <fieldset>
                 <legend>Login/Create User</legend>
                 <br>
-                <p id="Username">
-                    <label for="username">Username</label>
-                    <input type="text" id="username" name="username">
-                </p>
-                <p id="Password">
-                    <label for="password">Password</label>
-                    <input type="text" id="password" name="password">
-                </p>
-                <input type="button" id="submit" name="submit" value="Submit">
+                <form>
+                    <p id="Username: ">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" name="username">
+                    </p>
+                    <p id="Password: ">
+                        <label for="password">Password</label>
+                        <input type="text" id="password" name="password">
+                    </p>
+                </form>
+                <input type="button" id="new" name="new" value="New User">
+                <input type="button" id="login" name="login" value="Login"><br><br>
+                <input type="button" onClick="window.location.href='leaderboard.html';" id="leaderboard" name="leaderboard" value="Leaderboard"><br><br>
+                <input type="button" onClick="window.location.href='<<--link to create character page-->>';" id="character" name="character" value="New Character">
             </fieldset>
-        </form>
+        <!--</form>-->
 
         <script src="index.js"></script>
     </body><!--- A new Comment --->
