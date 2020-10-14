@@ -1,0 +1,32 @@
+var users = [
+    {
+        name: "Polina",
+        password: "123!",
+        highscore: 9,
+        rank: 4
+    },
+    {
+        name: "Jacob",
+        password: "122!",
+        highscore: 1054325,
+        rank: 1
+    },
+    {
+        name: "Kate",
+        password: "1234!",
+        highscore: 1052,
+        rank: 2
+    },
+    {
+        name: "Michael",
+        password: "123!",
+        highscore: 11,
+        rank: 3
+    }
+]
+
+function logIn(){
+    let name = document.getElementById("username").value;
+    let password = document.getElementById("password").value;
+    let user = {name: name, password: password, highscore: 0, rank: 0};
+}
