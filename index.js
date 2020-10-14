@@ -19,7 +19,7 @@ var users = [
     },
     {
         name: "Michael",
-        password: "123!",
+        password: "password",
         highscore: 11,
         rank: 3
     }
