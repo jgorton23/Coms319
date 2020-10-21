@@ -3,13 +3,22 @@ var character = new Object();
 function createCharacter(){
 	character.name = document.getElementById("name").value;
 	if (document.getElementById("warrior").checked == true) {
-		character.gameClass = "warrior";
+		character.gameClass = "Warrior";
+		character.health = 100;
+		character.mana = 0;
+		character.weapon = "Sword";
 	}
 	if (document.getElementById("ranger").checked == true) {
-		character.gameClass = "ranger";
+		character.gameClass = "Ranger";
+		character.health = 75;
+		character.mana = 15;
+		character.weapon = "Long Bow";
 	}
 	if (document.getElementById("mage").checked == true) {
-		character.gameClass = "mage";
+		character.gameClass = "Mage";
+		character.health = 50;
+		character.mana = 50;
+		character.weapon = "Staff";
 	}
 	character.boosters = [false, false, false, false, false];
 	if (document.getElementById("boost1").checked == true) {
@@ -28,6 +37,8 @@ function createCharacter(){
 		character.boosters[4] = true;
 	}
 	
+	var link = document.getElementById("mapLink")
+	link += createLink();
 	alert("Your new character is: " + character.name + " who is a " + character.gameClass + " and you have these boosters activated: " + getBoosters());
 }
 
@@ -43,3 +54,8 @@ function getBoosters() {
 	}
 	return output;
 }
+
+function createLink() {
+	
+}
+
