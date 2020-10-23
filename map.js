@@ -182,5 +182,15 @@ function createCharacter(){
 }
 
 function attack() {
-alert("attack");
+	const location = character.locat;
+	let x = parseInt(location.split(",")[0]) - 1;
+	let y = parseInt(location.split(",")[1]) - 1;
+	if(map[x-1][y] === "X"
+		|| map[x][y-1] === "X"
+		|| map[x][y+1] === "X"
+		|| map[x+1][y] === "X"){
+		alert("attack");
+	} else {
+		alert("no enemies near");
+	}
 }
