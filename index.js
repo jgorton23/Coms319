@@ -24,14 +24,12 @@ var users = [
         rank: 3
     }
 ];
-console.log(users);
 
 function registerUser(){
     let name = document.getElementById("username").value;
     let password = document.getElementById("password").value;
     let user = {name: name, password: password, highscore: 0, rank: 0};
     users.push(user);
-    console.log(users);
 }
 
 function validateUser() {

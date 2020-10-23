@@ -104,3 +104,7 @@ function createCharacter(){
 		character.weapon = "Staff";
 	}
 }
+
+function attack() {
+alert("attack");
+}
