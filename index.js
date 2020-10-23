@@ -30,6 +30,7 @@ function registerUser(){
     let password = document.getElementById("password").value;
     let user = {name: name, password: password, highscore: 0, rank: 0};
     users.push(user);
+    window.location.href="login.html"
 }
 
 function validateUser() {

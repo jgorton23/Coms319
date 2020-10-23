@@ -2,19 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
+    <title>Registration</title>
 </head>
 <body>
 <form>
     <div class="col">
-        <h1 style="text-align:center;">Sign in</h1>
+        <h1 style="text-align:center;">Register</h1>
         <input type="text" name="username"  id="username" placeholder="Username" required><br><br>
         <input type="password" name="password"  id="password" placeholder="Password" required><br><br>
-        <button type="button" onclick=validateUser()>Login</button><br><br>
-    </div>
-
-    <div class="container"  style="text-align:center;" style="background-color:#ffffff">
-        <span>New user? <a href="registration.html">Register</a></span>
+        <button type="button" onclick=registerUser()>Register</button><br><br>
     </div>
 </form>
 <script src="index.js"></script>
@@ -40,7 +36,7 @@
     }
 
     button {
-        background-color: #e0de41;
+        background-color: lightblue;
         color: white;
         padding: 14px 20px;
         margin: 8px 0;
