@@ -7,6 +7,8 @@ var yPos = 330;
 var canvas = document.getElementById("myCanvas");
 var ctx = canvas.getContext("2d");
 var image = document.getElementById("person");
+var inventory = [];
+var inventoryContainer = document.getElementById("inventoryContent");
 // var mapElem1;
 // var mapElem2;
 // var mapElem3;
@@ -132,6 +134,14 @@ function move(direction){
 		ctx.drawImage(image,xPos,yPos-10);
 		yPos-=10;
 	}
+	if((xPos+yPos)%500===0) {
+		addToInventory("Item "+(inventory.length+1));
+	}
+}
+
+function addToInventory(item) {
+	inventory.push(item);
+	inventoryContainer.innerText=inventory.toString();
 }
 
 function createCharacter(){

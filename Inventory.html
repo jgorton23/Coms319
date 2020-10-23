@@ -5,31 +5,44 @@
     <title>Inventory</title>
 </head>
 <body>
-    <div class=box>
-        Inventory
-        <form method ="post">
-            <p>
-                <input name="submit" type="Submit" value="Register"/>
-                <input name="reset" type="reset" value="Clear Form">
-        </form>
+<form>
+    <div class="col">
+        <h1 style="text-align:center;">Inventory</h1>
+
     </div>
+
+    <div class="container"  style="text-align:center;" style="background-color:#ffffff">
+
+    </div>
+</form>
+<script src="index.js"></script>
 </body>
+
 <style>
     body {
         text-align: center;
     }
     form {
         border: 1px solid #2e2e2e;
-        width: 100%;
+        width: 35%;
         display: inline-block;
     }
-    .box {
-        text-align: center;
-        font-weight:bold;
-        margin:120px auto;
-        height:150px;
+
+    input[type=text], input[type=password] {
+        width: 50%;
+        padding: 12px 20px;
+        margin: 8px 0;
         display: inline-block;
-        width: 200px;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
+    }
+
+    button:hover {
+        opacity: 0.8;
+    }
+
+    .container {
+        padding: 16px;
     }
 </style>
 </html>
