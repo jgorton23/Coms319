@@ -29,7 +29,7 @@ function createMap() {
 	i = locationString.split(",")[0];
 	j = locationString.split(",")[1];
 	map[i-1][j-1] = "O";
-	
+
 	mapElem1 = document.getElementById("mapP1")
 	mapElem2 = document.getElementById("mapP2")
 	mapElem3 = document.getElementById("mapP3")
