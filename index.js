@@ -19,18 +19,26 @@ var users = [
     },
     {
         name: "Michael",
-        password: "123!",
+        password: "password",
         highscore: 11,
         rank: 3
     }
-]
-console.log(users);
+];
 
 function registerUser(){
     let name = document.getElementById("username").value;
     let password = document.getElementById("password").value;
     let user = {name: name, password: password, highscore: 0, rank: 0};
     users.push(user);
-    console.log(users);
+}
 
+function validateUser() {
+    let username = document.getElementById("username").value;
+    let password = document.getElementById("password").value;
+    const user = users.find(user => user.name === username && user.password === password);
+    if (user) {
+        window.location.href="TODO";
+    } else {
+        alert("Username does not exist or password is incorrect");
+    }
 }
