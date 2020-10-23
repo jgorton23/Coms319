@@ -6,38 +6,37 @@
         <!--<link rel="stylesheet" href="style.css">-->
     </head>
     <body style="text-align: center;" onload="initializeGame()">
+    <div style="float: right">
+        Inventory
+        <div id="inventoryContent">
+            Empty
+        </div>
+    </div>
+
         <h1>
             Map
         </h1>
         <!--<form id="login">-->
+            <!-- <fieldset style = "height: 470px;"> -->
+                <!-- <legend>Map</legend> -->
+
         <div>
             <input type="button" value="Attack" onclick="attack()"/>
-            <button type="button" onclick="window.location.href='Inventory.html';">Inventory</a></button>
         </div>
 
             <fieldset style = "height: 470px;">
                 <legend>Map</legend>
                 <br>
-                <p id = "mapP1">p</p>
+                <canvas id="myCanvas" width="1400" height="700" style="border:1px solid #000000;"></canvas>
+                <img id="person" src="Stick_Person.png" alt="person" width="22" height="44">
+                <!-- <p id = "mapP1">p</p>
 				<p id = "mapP2">sd</p>
 				<p id = "mapP3">sdf</p>
 				<p id = "mapP4">sdfs</p>
-				<p id = "mapP5">sdfsdfs</p>
-            </fieldset>
+				<p id = "mapP5">sdfsdfs</p> -->
+            <!-- </fieldset> -->
         <!--</form>-->
 
         <script src="map.js"></script>
     </body><!--- A new Comment --->
-    <style>
-        button {
-            line-height: 12px;
-            width: 80px;
-            font-size: 12pt;
-            margin-top: 30px;
-            margin-right: 30px;
-            position:absolute;
-            top:0;
-            right:0;
-        }
-    </style>
 </html>

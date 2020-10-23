@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Map Test</title>
+        <!--<link rel="stylesheet" href="style.css">-->
+    </head>
+    <body>
+        <h1 style="text-align: center;">
+            Map Test
+        </h1>
+        <canvas id="myCanvas" width="1400" height="700" style="border:1px solid #000000;"></canvas>
+        <img id="person" src="Stick_Person.png" alt="person" width="22" height="44">
+        <script>
+            var xPos = 10;
+            var yPos = 330;
+            var canvas = document.getElementById("myCanvas");
+            var ctx = canvas.getContext("2d");
+            var image = document.getElementById("person");
+            window.onload=function(){
+                ctx.drawImage(image,xPos,yPos);
+                //ctx.drawImage(image, 50, 330);
+                for(var i=0;i<(1400);i+=10){
+                    for(var j=0;j<700;j+=10){
+                        if(i==0 || j==0 || i==1390 || j==690){
+                            ctx.beginPath();
+                            ctx.rect(i,j,10,10);
+                            ctx.fillStyle="black";
+                            ctx.fill();
+                        }
+                    }
+                }
+            }
+
+            document.onkeydown = checkKey;
+
+            function checkKey(e) {
+
+                e = e || window.event;
+
+                if (e.keyCode == '38') {
+                    // up arrow
+                    //alert("up pressed");
+                    move("up");
+                }
+                else if (e.keyCode == '40') {
+                    // down arrow
+                    //alert("down pressed");
+                    move("down");
+                }
+                else if (e.keyCode == '37') {
+                    // left arrow
+                    //alert("left pressed");
+                    move("left");
+                }
+                else if (e.keyCode == '39') {
+                    // right arrow
+                    // alert("right pressed");
+                    move("right");
+                }
+
+            }
+
+            function move(direction){
+                // ctx.font = "30px Arial";
+                // ctx.fillText("MOVE RIGHT", 10, 50);
+                if(direction=="right" && xPos!=1370){
+                    ctx.clearRect(xPos,yPos,22,44);
+                    ctx.drawImage(image,xPos+10,yPos);
+                    xPos+=10;
+                }
+                else if(direction=="left" && xPos!=10){
+                    ctx.clearRect(xPos,yPos,22,44);
+                    ctx.drawImage(image,xPos-10,yPos);
+                    xPos-=10;
+                }
+                else if(direction=="down" && yPos!=640){
+                    ctx.clearRect(xPos,yPos,22,44);
+                    ctx.drawImage(image,xPos,yPos+10);
+                    yPos+=10;
+                }
+                else if(direction=="up" && yPos!=10){
+                    ctx.clearRect(xPos,yPos,22,44);
+                    ctx.drawImage(image,xPos,yPos-10);
+                    yPos-=10;
+                }
+            }
+            
+            
+        </script>
+    </body>
+</html>
