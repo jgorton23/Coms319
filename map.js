@@ -87,7 +87,16 @@ function move(direction){
 		yPos-=10;
 	}
 	if((xPos+yPos)%500===0) {
-		addToInventory("Item "+(inventory.length+1));
+		let randN = Math.floor(Math.random() * 3);
+		if (randN == 0) {
+			addToInventory("Algiz rune");   //This will damage everything in the room
+		}
+		else if (randN == 1) {
+			addToInventory("Mannaz rune");  //This will double the amount of gold the character can hold
+		}
+		else {
+			addToInventory("Dagaz rune");   //This will full heal the characters health and mana
+		}
 	}
 }
 
@@ -127,19 +136,32 @@ function createCharacter(){
 	}
 	
 	if (character.gameClass == "warrior") {
+		character.maxHealth = 100;
 		character.health = 100;
+		character.maxMana = 0;
 		character.mana = 0;
 		character.weapon = "Sword";
 	}
 	if (character.gameClass == "ranger") {
+		character.maxHealth = 75;
 		character.health = 75;
+		character.maxMana = 15;
 		character.mana = 15;
 		character.weapon = "Long Bow";
 	}
 	if (character.gameClass == "mage") {
+		character.maxHealth = 50;
 		character.health = 50;
+		character.maxMana = 50;
 		character.mana = 50;
 		character.weapon = "Staff";
+	}
+	character.healthPotions = 0;
+	character.manaPotions = 0;
+	
+	if (character.boosters[2]) {
+		character.maxHealth = character.maxHealth*(.9);
+		character.health = character.health*(.9);
 	}
 }
 
