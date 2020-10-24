@@ -30,7 +30,7 @@ function registerUser(){
     let password = document.getElementById("password").value;
     let user = {name: name, password: password, highscore: 0, rank: 0};
     users.push(user);
-    window.location.href="login.html"
+    window.location.href="characterCreator.html"
 }
 
 function validateUser() {
@@ -38,7 +38,7 @@ function validateUser() {
     let password = document.getElementById("password").value;
     const user = users.find(user => user.name === username && user.password === password);
     if (user) {
-        window.location.href="TODO";
+        window.location.href="characterCreator.html";
     } else {
         alert("Username does not exist or password is incorrect");
     }
