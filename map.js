@@ -9,22 +9,6 @@ var ctx = canvas.getContext("2d");
 var image = document.getElementById("person");
 var inventory = [];
 var inventoryContainer = document.getElementById("inventoryContent");
-// var mapElem1;
-// var mapElem2;
-// var mapElem3;
-// var mapElem4;
-// var mapElem5;
-// var mapString;
-// var i;
-// var j;
-// var locationString;
-// var map = [
-//     ['#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#'],
-//     ['#', '_', '_', '_', '_', '_', '_', '_', '_', '_', '#'],
-//     ['#', '_', '_', '_', '_', '_', '_', '_', '_', '_', '#'],
-//     ['#', '_', '_', '_', '_', '_', '_', '_', '_', '_', '#'],
-//     ['#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#']
-// ];
 
 function initializeGame() {
 	createCharacter();
@@ -47,38 +31,6 @@ function createMap() {
 			}
 		}
 	}
-	
-	// locationString = character.locat;
-	// i = locationString.split(",")[0];
-	// j = locationString.split(",")[1];
-	// map[i-1][j-1] = "O";
-
-	// mapElem1 = document.getElementById("mapP1")
-	// mapElem2 = document.getElementById("mapP2")
-	// mapElem3 = document.getElementById("mapP3")
-	// mapElem4 = document.getElementById("mapP4")
-	// mapElem5 = document.getElementById("mapP5")
-	// for (i = 0; i < map.length; i++) {
-	// 	mapString = "";
-	// 	for (j = 0; j < map[i].length; j++) {
-	// 		mapString += String(map[i][j]);
-	// 	} 
-	// 	if (i == 0) {
-	// 		mapElem1.innerHTML = mapString;
-	// 	}
-	// 	if (i == 1) {
-	// 		mapElem2.innerHTML = mapString;
-	// 	}	
-	// 	if (i == 2) {
-	// 		mapElem3.innerHTML = mapString;
-	// 	}	
-	// 	if (i == 3) {
-	// 		mapElem4.innerHTML = mapString;
-	// 	}	
-	// 	if (i == 4) {
-	// 		mapElem5.innerHTML = mapString;
-	// 	}			
-	// }
 }
 
 //function that checks for arrow key presses
