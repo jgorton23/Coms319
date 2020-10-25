@@ -89,13 +89,22 @@ function move(direction){
 	if((xPos+yPos)%500===0) {
 		let randN = Math.floor(Math.random() * 3);
 		if (randN == 0) {
-			addToInventory("Algiz rune");   //This will damage everything in the room
+			let randN = Math.floor(Math.random() * 3);
+			if (randN == 0) {
+				addToInventory("Algiz rune");   //This will damage everything in the room
+			}
+			else if (randN == 1) {
+				addToInventory("Mannaz rune");  //This will double the amount of gold the character can hold
+			}
+			else {
+				addToInventory("Dagaz rune");   //This will full heal the characters health and mana
+			}  
 		}
 		else if (randN == 1) {
-			addToInventory("Mannaz rune");  //This will double the amount of gold the character can hold
+			character.healthPotions++;  
 		}
 		else {
-			addToInventory("Dagaz rune");   //This will full heal the characters health and mana
+			character.manaPotions++;   
 		}
 	}
 }
