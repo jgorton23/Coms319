@@ -174,10 +174,6 @@ function createCharacter(){
 	}
 }
 
-function willDie(currentHealth, damage) {
-	return (currentHealth < damage);
-}
-
 function attack() {
 	// const location = character.locat;
 	// let x = parseInt(location.split(",")[0]) - 1;
