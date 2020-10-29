@@ -9,10 +9,20 @@ var ctx = canvas.getContext("2d");
 var image = document.getElementById("person");
 var inventory = [];
 var inventoryContainer = document.getElementById("inventoryContent");
+const numAlgiz = 5;
+const numMannaz = 5;
+const numDagaz = 5;
+const inventoryMap = [];
+const heightPixels = 700;
+const widthPixels = 1400;
+const stepPixels = 10;
+const numOfRows = heightPixels/stepPixels;
+const numOfColumns = widthPixels/stepPixels;
 
 function initializeGame() {
 	createCharacter();
 	createMap();
+	initializeInventory();
 }
 
 //function that draws the border of the map, currectly just the edge, but could be changed once we make the 
@@ -21,11 +31,11 @@ function initializeGame() {
 function createMap() {
 	ctx.drawImage(image,xPos,yPos);
 	//ctx.drawImage(image, 50, 330);
-	for(var i=0;i<(1400);i+=10){
-		for(var j=0;j<700;j+=10){
-			if(i==0 || j==0 || i==1390 || j==690){
+	for(var i=0; i<(widthPixels); i+=stepPixels){
+		for(var j=0; j<heightPixels; j+=stepPixels){
+			if(i==0 || j==0 || i==widthPixels-stepPixels || j==heightPixels-stepPixels){
 				ctx.beginPath();
-				ctx.rect(i,j,10,10);
+				ctx.rect(i,j,stepPixels,stepPixels);
 				ctx.fillStyle="black";
 				ctx.fill();
 			}
@@ -68,46 +78,62 @@ function move(direction){
 	// ctx.fillText("MOVE RIGHT", 10, 50);
 	if(direction=="right" && xPos!=1370){
 		ctx.clearRect(xPos,yPos,22,44);
-		ctx.drawImage(image,xPos+10,yPos);
-		xPos+=10;
+		ctx.drawImage(image,xPos+stepPixels,yPos);
+		xPos+=stepPixels;
 	}
-	else if(direction=="left" && xPos!=10){
+	else if(direction=="left" && xPos!=stepPixels){
 		ctx.clearRect(xPos,yPos,22,44);
-		ctx.drawImage(image,xPos-10,yPos);
-		xPos-=10;
+		ctx.drawImage(image,xPos-stepPixels,yPos);
+		xPos-=stepPixels;
 	}
 	else if(direction=="down" && yPos!=640){
 		ctx.clearRect(xPos,yPos,22,44);
-		ctx.drawImage(image,xPos,yPos+10);
-		yPos+=10;
+		ctx.drawImage(image,xPos,yPos+stepPixels);
+		yPos+=stepPixels;
 	}
-	else if(direction=="up" && yPos!=10){
+	else if(direction=="up" && yPos!=stepPixels){
 		ctx.clearRect(xPos,yPos,22,44);
-		ctx.drawImage(image,xPos,yPos-10);
-		yPos-=10;
+		ctx.drawImage(image,xPos,yPos-stepPixels);
+		yPos-=stepPixels;
 	}
-	if((xPos+yPos)%500===0) {
-		let randN = Math.floor(Math.random() * 3);
-		if (randN == 0) {
-			let randN = Math.floor(Math.random() * 3);
-			if (randN == 0) {
-				addToInventory("Algiz rune");   //This will damage everything in the room
-			}
-			else if (randN == 1) {
-				addToInventory("Mannaz rune");  //This will double the amount of gold the character can hold
-			}
-			else {
-				addToInventory("Dagaz rune");   //This will full heal the characters health and mana
-			}  
-		}
-		else if (randN == 1) {
-			character.healthPotions++;  
-		}
-		else {
-			character.manaPotions++;   
-		}
+	// if((xPos+yPos)%500===0) {
+	// 	let randN = Math.floor(Math.random() * 3);
+	// 	if (randN == 0) {
+	// 		let randN = Math.floor(Math.random() * 3);
+	// 		if (randN == 0) {
+	// 			addToInventory("Algiz rune");   //This will damage everything in the room
+	// 		}
+	// 		else if (randN == 1) {
+	// 			addToInventory("Mannaz rune");  //This will double the amount of gold the character can hold
+	// 		}
+	// 		else {
+	// 			addToInventory("Dagaz rune");   //This will full heal the characters health and mana
+	// 		}
+	// 	}
+	// 	else if (randN == 1) {
+	// 		character.healthPotions++;
+	// 	}
+	// 	else {
+	// 		character.manaPotions++;
+	// 	}
+	// }
+	let row = yPos/stepPixels;
+	let col = xPos/stepPixels;
+	console.log(yPos, row, xPos, col);
+	if (inventoryMap[row][col] === 101) {
+		inventoryMap[row][col] = 0;
+		addToInventory("Algiz rune");   //This will damage everything in the room
+	} else if (inventoryMap[row][col] === 102) {
+		inventoryMap[row][col] = 0;
+		addToInventory("Mannaz rune");  //This will double the amount of gold the character can hold
+	} else if (inventoryMap[row][col] === 103) {
+		inventoryMap[row][col] = 0;
+		addToInventory("Dagaz rune");   //This will full heal the characters health and mana
 	}
+	drawInventoryMap();
 }
+
+
 
 function addToInventory(item) {
 	inventory.push(item);
@@ -174,6 +200,34 @@ function createCharacter(){
 	}
 }
 
+function initializeInventory() {
+	for (let row = 0; row < numOfRows; row++) {
+		inventoryMap.push([]);
+		for (let col = 0; col < numOfColumns; col++) {
+			inventoryMap[row].push(0);
+		}
+	}
+	for (let i = 0; i < numAlgiz; i++) {
+		let row = Math.floor(Math.random() * numOfRows);
+		let col = Math.floor(Math.random() * numOfColumns);
+		console.log(row, col, "101");
+		inventoryMap[row][col] = 101;
+	}
+	for (let i = 0; i < numMannaz; i++) {
+		let row = Math.floor(Math.random() * numOfRows);
+		let col = Math.floor(Math.random() * numOfColumns);
+		console.log(row, col, "102");
+		inventoryMap[row][col] = 102;
+	}
+	for (let i = 0; i < numDagaz; i++) {
+		let row = Math.floor(Math.random() * numOfRows);
+		let col = Math.floor(Math.random() * numOfColumns);
+		console.log(row, col, "103");
+		inventoryMap[row][col] = 103;
+	}
+	drawInventoryMap();
+}
+
 function attack() {
 	// const location = character.locat;
 	// let x = parseInt(location.split(",")[0]) - 1;
@@ -187,7 +241,7 @@ function attack() {
 	// 	alert("no enemies near");
 	// }
 	ctx.beginPath();
-	ctx.rect(xPos+22,yPos+25,10,10);
+	ctx.rect(xPos+22,yPos+25,stepPixels,stepPixels);
 	ctx.fillStyle="red";
 	ctx.fill();
 }
