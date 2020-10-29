@@ -133,7 +133,31 @@ function move(direction){
 	drawInventoryMap();
 }
 
-
+function drawInventoryMap() {
+	for (let row = 0; row < numOfRows; row++) {
+		inventoryMap.push([]);
+		for (let col = 0; col < numOfColumns; col++) {
+			if (inventoryMap[row][col] === 101) {
+				ctx.beginPath();
+				ctx.rect(col*stepPixels,row*stepPixels,stepPixels,stepPixels);
+				ctx.fillStyle="blue";
+				ctx.fill();
+			}
+			if (inventoryMap[row][col] === 102) {
+				ctx.beginPath();
+				ctx.rect(col*stepPixels,row*stepPixels,stepPixels,stepPixels);
+				ctx.fillStyle="orange";
+				ctx.fill();
+			}
+			if (inventoryMap[row][col] === 103) {
+				ctx.beginPath();
+				ctx.rect(col*stepPixels,row*stepPixels,stepPixels,stepPixels);
+				ctx.fillStyle="pink";
+				ctx.fill();
+			}
+		}
+	}
+}
 
 function addToInventory(item) {
 	inventory.push(item);
