@@ -1,3 +1,4 @@
+var livingEntities = [];
 var character = new Object();
 var address;
 var information;
@@ -20,6 +21,7 @@ const numOfRows = heightPixels/stepPixels;
 const numOfColumns = widthPixels/stepPixels;
 
 function initializeGame() {
+	addToLivingEntities(character);
 	createCharacter();
 	createMap();
 	initializeInventory();
@@ -69,7 +71,11 @@ function checkKey(e) {
 		// alert("right pressed");
 		move("right");
 	}
-
+	else if (e.keyCode == '66') {
+		// B key
+		// alert("right pressed");
+		useRune();
+	}
 }
 
 //function that handles arrow key presses
@@ -96,39 +102,41 @@ function move(direction){
 		ctx.drawImage(image,xPos,yPos-stepPixels);
 		yPos-=stepPixels;
 	}
-	// if((xPos+yPos)%500===0) {
-	// 	let randN = Math.floor(Math.random() * 3);
-	// 	if (randN == 0) {
-	// 		let randN = Math.floor(Math.random() * 3);
-	// 		if (randN == 0) {
-	// 			addToInventory("Algiz rune");   //This will damage everything in the room
-	// 		}
-	// 		else if (randN == 1) {
-	// 			addToInventory("Mannaz rune");  //This will double the amount of gold the character can hold
-	// 		}
-	// 		else {
-	// 			addToInventory("Dagaz rune");   //This will full heal the characters health and mana
-	// 		}
-	// 	}
-	// 	else if (randN == 1) {
-	// 		character.healthPotions++;
-	// 	}
-	// 	else {
-	// 		character.manaPotions++;
-	// 	}
-	// }
+	if((xPos+yPos)%500===0) {
+		let randN = Math.floor(Math.random() * 3);
+		if (randN == 0) {
+			/*
+			let randN = Math.floor(Math.random() * 3);
+			if (randN == 0) {
+				addToInventory("Algiz rune");   //This will damage everything in the room
+			}
+			else if (randN == 1) {
+				addToInventory("Mannaz rune");  //This will double the amount of gold the character can hold
+			}
+			else {
+				addToInventory("Dagaz rune");   //This will full heal the characters health and mana
+			}
+			*/
+		}
+		else if (randN == 1) {
+			character.healthPotions++;
+		}
+		else {
+			character.manaPotions++;
+		}
+	}
 	let row = yPos/stepPixels;
 	let col = xPos/stepPixels;
 	console.log(yPos, row, xPos, col);
 	if (inventoryMap[row][col] === 101) {
 		inventoryMap[row][col] = 0;
-		addToInventory("Algiz rune");   //This will damage everything in the room
+		character.currentRune = "Algiz rune";   //This will damage everything in the room
 	} else if (inventoryMap[row][col] === 102) {
 		inventoryMap[row][col] = 0;
-		addToInventory("Mannaz rune");  //This will double the amount of gold the character can hold
+		character.currentRune = "Mannaz rune";  //This will double the amount of gold the character is holding
 	} else if (inventoryMap[row][col] === 103) {
 		inventoryMap[row][col] = 0;
-		addToInventory("Dagaz rune");   //This will full heal the characters health and mana
+		character.currentRune = "Dagaz rune";   //This will full heal the characters health and mana
 	}
 	drawInventoryMap();
 }
@@ -162,6 +170,26 @@ function drawInventoryMap() {
 function addToInventory(item) {
 	inventory.push(item);
 	inventoryContainer.innerText=inventory.toString();
+}
+
+function addToLivingEntities(entity) {
+	livingEntities.push(entity);
+}
+
+function useRune() {
+	if (character.currentRune == "Algiz rune") { //This will damage everything in the room
+		for (let ind = 0; ind < livingEntities.length; ind++) {
+			livingEntities[ind].health -= 10;
+		}
+	}
+	else if (character.currentRune == "Mannaz rune") { //This will double the amount of gold the character is holding
+		character.gold *= 2;
+	}
+	else if (character.currentRune == "Dagaz rune") { //This will full heal the characters health and mana
+		character.health = character.maxHealth;
+		character.mana = character.maxMana;
+	}
+	character.currentRune = "";
 }
 
 function createCharacter(){
@@ -222,6 +250,8 @@ function createCharacter(){
 		character.maxHealth = character.maxHealth*(.9);
 		character.health = character.health*(.9);
 	}
+	character.gold = 10;
+	character.currentRune = "";
 }
 
 function initializeInventory() {
