@@ -4,19 +4,25 @@ function createCharacter(){
 	character.name = document.getElementById("name").value;
 	if (document.getElementById("warrior").checked == true) {
 		character.gameClass = "Warrior";
+		character.maxHealth = 100;
 		character.health = 100;
+		character.maxMana=0;
 		character.mana = 0;
 		character.weapon = "Sword";
 	}
 	if (document.getElementById("ranger").checked == true) {
 		character.gameClass = "Ranger";
+		character.maxHealth = 75;
 		character.health = 75;
+		character.maxMana=15;
 		character.mana = 15;
 		character.weapon = "Long Bow";
 	}
 	if (document.getElementById("mage").checked == true) {
 		character.gameClass = "Mage";
+		character.maxHealth = 50;
 		character.health = 50;
+		character.maxMana=50;
 		character.mana = 50;
 		character.weapon = "Staff";
 	}

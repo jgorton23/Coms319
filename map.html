@@ -12,14 +12,20 @@
             Empty
         </div>
     </div>
-        <!-- Here is the progress bar: health/mana bar  
-        <progress id="file" max="100" value="70"> 70% </progress>  -->
+         
         <h1>
             Map
         </h1>
         <!--<form id="login">-->
+        <!-- Here is the progress bar: health/mana bar  -->
+        <div style="float: left;">
+            <label for="healthBar">Health</label>
+            <progress id="healthBar" max="100" value="50"> 100% </progress> <br>
+            <label for="manaBar">Mana</label>
+            <progress id="manaBar" max="100" value="50"> 100% </progress>
+        </div>
         <input type="button" id="attack" name="Attack" value="Attack" onclick=attack()>
-        <input type="button" id="inventory" name="Inventory" value="Inventory" onclick="window.location.href='Inventory.html';">
+        <!--<input type="button" id="inventory" name="Inventory" value="Inventory" onclick="window.location.href='Inventory.html';">-->
             <!-- <fieldset style = "height: 470px;"> -->
                 <!-- <legend>Map</legend> -->
                 <br>

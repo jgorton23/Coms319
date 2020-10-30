@@ -73,8 +73,31 @@ function checkKey(e) {
 	}
 	else if (e.keyCode == '66') {
 		// B key
-		// alert("right pressed");
+		// alert("B pressed");
 		useRune();
+	}
+	else if (e.keyCode == '77') {
+		// m key
+		//alert("M pressed");
+		usePotion("health");
+	}
+	else if (e.keyCode == '78') {
+		// n key
+		// alert("N pressed");
+		usePotion("mana");
+	}
+}
+
+function usePotion(type){
+	if(type=="health" && character.healthPotions!=0){
+		character.healthPotions--;
+		character.health = character.maxHealth;
+		document.getElementById("healthBar").setAttribute("value",100);
+	}
+	else if(type=="mana" && character.manaPotions!=0){
+		character.manaPotions--;
+		character.mana = character.maxMana;
+		document.getElementById("manaBar").setAttribute("value",100);
 	}
 }
 
@@ -257,8 +280,8 @@ function createCharacter(){
 		character.mana = 50;
 		character.weapon = "Staff";
 	}
-	character.healthPotions = 0;
-	character.manaPotions = 0;
+	character.healthPotions = 1;
+	character.manaPotions = 1;
 	
 	if (character.boosters[2]) {
 		character.maxHealth = character.maxHealth*(.9);
