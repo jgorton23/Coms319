@@ -128,15 +128,29 @@ function move(direction){
 	let row = yPos/stepPixels;
 	let col = xPos/stepPixels;
 	console.log(yPos, row, xPos, col);
-	if (inventoryMap[row][col] === 101) {
-		inventoryMap[row][col] = 0;
-		character.currentRune = "Algiz rune";   //This will damage everything in the room
-	} else if (inventoryMap[row][col] === 102) {
-		inventoryMap[row][col] = 0;
-		character.currentRune = "Mannaz rune";  //This will double the amount of gold the character is holding
-	} else if (inventoryMap[row][col] === 103) {
-		inventoryMap[row][col] = 0;
-		character.currentRune = "Dagaz rune";   //This will full heal the characters health and mana
+	if(character.currentRune === "") {
+		if (inventoryMap[row][col] === 101) {
+			inventoryMap[row][col] = 0;
+			character.currentRune = "Algiz rune";   //This will damage everything in the room
+		} else if (inventoryMap[row][col] === 102) {
+			inventoryMap[row][col] = 0;
+			character.currentRune = "Mannaz rune";  //This will double the amount of gold the character is holding
+		} else if (inventoryMap[row][col] === 103) {
+			inventoryMap[row][col] = 0;
+			character.currentRune = "Dagaz rune";   //This will full heal the characters health and mana
+		}
+	} else {
+		if (inventoryMap[row][col] === 101 && window.confirm("Change Rune?")) {
+			inventoryMap[row][col] = 0;
+			character.currentRune = "Algiz rune";   //This will damage everything in the room
+			console.log(character.currentRune)
+		} else if (inventoryMap[row][col] === 102 && window.confirm("Change Rune?")) {
+			inventoryMap[row][col] = 0;
+			character.currentRune = "Mannaz rune";  //This will double the amount of gold the character is holding
+		} else if (inventoryMap[row][col] === 103 && window.confirm("Change Rune?")) {
+			inventoryMap[row][col] = 0;
+			character.currentRune = "Dagaz rune";   //This will full heal the characters health and mana
+		}
 	}
 	drawInventoryMap();
 }
