@@ -54,43 +54,21 @@ function checkKey(e) {
 
 	e = e || window.event;
 
-	if (e.keyCode == '38') {
-		// up arrow
-		//alert("up pressed");
+	if (e.keyCode == '38') {// up arrow
 		move("up");
-	}
-	else if (e.keyCode == '40') {
-		// down arrow
-		//alert("down pressed");
+	}else if (e.keyCode == '40') {// down arrow
 		move("down");
-	}
-	else if (e.keyCode == '37') {
-		// left arrow
-		//alert("left pressed");
+	}else if (e.keyCode == '37') {// left arrow
 		move("left");
-	}
-	else if (e.keyCode == '39') {
-		// right arrow
-		// alert("right pressed");
+	}else if (e.keyCode == '39') {// right arrow
 		move("right");
-	}
-	else if (e.keyCode == '66') {
-		// B key
-		// alert("B pressed");
+	}else if (e.keyCode == '66') {// B key
 		useRune();
-	}
-	else if (e.keyCode == '77') {
-		// m key
-		//alert("M pressed");
+	}else if (e.keyCode == '77') {// m key
 		usePotion("health");
-	}
-	else if (e.keyCode == '78') {
-		// n key
-		// alert("N pressed");
+	}else if (e.keyCode == '78') {// n key
 		usePotion("mana");
-	}
-	else if (e.keyCode == '32') {
-		// space bar
+	}else if (e.keyCode == '32') {// space bar
 		attack();
 	}
 }
