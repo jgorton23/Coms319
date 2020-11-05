@@ -6,6 +6,7 @@ var informationArray;
 var level = 1; //the level(room) that the player is on currently
 var xPos = 10; //the X coordinate of the character
 var yPos = 330; //the Y coordinate of the character
+character.position=[xPos,yPos];//for more continutity of entites
 var facing = "right"; //direction player last moved, used for directing
 var canvas = document.getElementById("myCanvas"); //the canvas that is the map
 var ctx = canvas.getContext("2d"); //canvas editor
@@ -114,6 +115,7 @@ function move(direction){
 		ctx.drawImage(person,xPos,yPos-stepPixels,20,40);
 		yPos-=stepPixels;
 	}
+	character.position=[xPos,yPos]
 	if((xPos+yPos)%500===0) {
 		let randN = Math.floor(Math.random() * 3);
 		if (randN == 0) {
@@ -376,13 +378,11 @@ function addPoints() {
 
 function spawnEnemies(){
 	//alert("spawn called");
-	var numEnemies=3+(level/2);
+	var numEnemies=6+(level/2);
 	for(var i = 1; i < numEnemies; i++){
 		var enemy = new Object();
-		var x = Math.floor(Math.random() * 135);
-		var y = Math.floor(Math.random() * 65);
 		enemy.id=i;
-		enemy.position=[10*x,10*y];
+		enemy.position=getRandomPosition();
 		enemy.strength=level;
 		enemy.health=10;
 		enemy.type="closeRange";
@@ -397,43 +397,40 @@ function spawnEnemies(){
 	}
 }
 
-function attack() {
-	// const location = character.locat;
-	// let x = parseInt(location.split(",")[0]) - 1;
-	// let y = parseInt(location.split(",")[1]) - 1;
-	// if(map[x-1][y] === "X"
-	// 	|| map[x][y-1] === "X"
-	// 	|| map[x][y+1] === "X"
-	// 	|| map[x+1][y] === "X"){
-	// 	alert("attack");
-	// } else {
-	// 	alert("no enemies near");
-	// }
+function getRandomPosition(){//should ensure no enemies overlap on spawn with eachother or with character
+	var x = Math.floor(Math.random() * 135);
+	var y = Math.floor(Math.random() * 65);
+	for(var i = 0; i < livingEntities.length;i++){
+		if(livingEntities[i].position[0]/10>x-2 && livingEntities[i].position[0]/10<x+2){
+			if(livingEntities[i].position[1]/10>y-4 && livingEntities[i].position[1]/10<y+4){
+				return getRandomPosition();
+			}		
+		}
+	}
+	return [x*10,y*10];
+}
 
+function attack() {
 	if(facing=="up"){//error here
 		var enemy=enemyAdjacent("up");
-		alert(enemy.health);
 		enemy.health-=10;
 		if(enemy.health==0){
 			removeLivingEntity(enemy);
 		}
 	}else if(facing=="right"){
 		var enemy=enemyAdjacent("right");
-		alert(enemy.health);
 		enemy.health-=10;
 		if(enemy.health==0){
 			removeLivingEntity(enemy);
 		}
 	}else if(facing=="left"){
 		var enemy=enemyAdjacent("left");
-		alert(enemy.health);
 		enemy.health-=10;
 		if(enemy.health==0){
 			removeLivingEntity(enemy);
 		}
 	}else if (facing=="down"){
 		var enemy=enemyAdjacent("down");
-		alert(enemy.health);
 		enemy.health-=10;
 		if(enemy.health==0){
 			removeLivingEntity(enemy);
