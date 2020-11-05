@@ -3,12 +3,14 @@ var character = new Object();
 var address;
 var information;
 var informationArray;
-var xPos = 10;
-var yPos = 330;
-var canvas = document.getElementById("myCanvas");
-var ctx = canvas.getContext("2d");
-var image = document.getElementById("person");
-var inventory = [];
+var level = 1; //the level(room) that the player is on currently
+var xPos = 10; //the X coordinate of the character
+var yPos = 330; //the Y coordinate of the character
+var facing = "right"; //direction player last moved, used for directing
+var canvas = document.getElementById("myCanvas"); //the canvas that is the map
+var ctx = canvas.getContext("2d"); //canvas editor
+var image = document.getElementById("person"); //the image of the character
+var inventory = []; //the inventory array of the character
 var inventoryContainer = document.getElementById("inventoryContent");
 const numAlgiz = 5;
 const numMannaz = 5;
@@ -24,25 +26,25 @@ function initializeGame() {
 	addToLivingEntities(character);
 	createCharacter();
 	createMap();
+	spawnEnemies();
 	initializeInventory();
 }
 
-//function that draws the border of the map, currectly just the edge, but could be changed once we make the 
-//map randomly generated. I think it's best to store the locations of the walls in a 2d array, then instead of checking if 
-//the values of i and j are along the edge of the canvas, check if htey are in the array
+//function is unnecessar unless we create a map more complicated than one big room
+//the only thing it does rn is spawn the character
 function createMap() {
 	ctx.drawImage(image,xPos,yPos);
 	//ctx.drawImage(image, 50, 330);
-	for(var i=0; i<(widthPixels); i+=stepPixels){
-		for(var j=0; j<heightPixels; j+=stepPixels){
-			if(i==0 || j==0 || i==widthPixels-stepPixels || j==heightPixels-stepPixels){
-				ctx.beginPath();
-				ctx.rect(i,j,stepPixels,stepPixels);
-				ctx.fillStyle="black";
-				ctx.fill();
-			}
-		}
-	}
+	// for(var i=0; i<(widthPixels); i+=stepPixels){
+	// 	for(var j=0; j<heightPixels; j+=stepPixels){
+	// 		if(i==0 || j==0 || i==widthPixels-stepPixels || j==heightPixels-stepPixels){
+	// 			ctx.beginPath();
+	// 			ctx.rect(i,j,stepPixels,stepPixels);
+	// 			ctx.fillStyle="black";
+	// 			ctx.fill();
+	// 		}
+	// 	}
+	// }
 }
 
 //function that checks for arrow key presses
@@ -103,25 +105,24 @@ function usePotion(type){
 
 //function that handles arrow key presses
 function move(direction){
-	// ctx.font = "30px Arial";
-	// ctx.fillText("MOVE RIGHT", 10, 50);
+	facing=direction;
 	if(direction=="right" && xPos!=1370){
-		ctx.clearRect(xPos,yPos,22,44);
+		ctx.clearRect(xPos-10,yPos-10,42,70);
 		ctx.drawImage(image,xPos+stepPixels,yPos);
 		xPos+=stepPixels;
 	}
 	else if(direction=="left" && xPos!=stepPixels){
-		ctx.clearRect(xPos,yPos,22,44);
+		ctx.clearRect(xPos-10,yPos-10,42,70);
 		ctx.drawImage(image,xPos-stepPixels,yPos);
 		xPos-=stepPixels;
 	}
 	else if(direction=="down" && yPos!=640){
-		ctx.clearRect(xPos,yPos,22,44);
+		ctx.clearRect(xPos-10,yPos-10,42,70);
 		ctx.drawImage(image,xPos,yPos+stepPixels);
 		yPos+=stepPixels;
 	}
 	else if(direction=="up" && yPos!=stepPixels){
-		ctx.clearRect(xPos,yPos,22,44);
+		ctx.clearRect(xPos-10,yPos-10,42,70);
 		ctx.drawImage(image,xPos,yPos-stepPixels);
 		yPos-=stepPixels;
 	}
@@ -319,6 +320,22 @@ function initializeInventory() {
 	drawInventoryMap();
 }
 
+function spawnEnemies(){
+	//alert("spawn called");
+	var numEnemies=3+(level/2);
+	for(var i = 0; i < numEnemies; i++){
+		var enemy = new Object();
+		enemy.position=[100*i,100*i];
+		enemy.strength=level;
+		enemy.type="closeRange";
+		ctx.beginPath();
+		ctx.rect(enemy.position[0],enemy.position[1],stepPixels,stepPixels);
+		ctx.fillStyle="red";
+		ctx.fill();
+		//ctx.drawImage(image,100*i,100*i);
+	}
+}
+
 function attack() {
 	// const location = character.locat;
 	// let x = parseInt(location.split(",")[0]) - 1;
@@ -331,8 +348,17 @@ function attack() {
 	// } else {
 	// 	alert("no enemies near");
 	// }
+
 	ctx.beginPath();
-	ctx.rect(xPos+22,yPos+25,stepPixels,stepPixels);
+	if(facing=="up"){
+		ctx.rect(xPos+6,yPos-10,stepPixels,stepPixels);
+	}else if(facing=="right"){
+		ctx.rect(xPos+22,yPos+25,stepPixels,stepPixels);
+	}else if(facing=="left"){
+		ctx.rect(xPos-10,yPos+25,stepPixels,stepPixels);
+	}else if (facing=="down"){
+		ctx.rect(xPos+6,yPos+50,stepPixels,stepPixels);
+	}	
 	ctx.fillStyle="red";
 	ctx.fill();
 }
