@@ -74,6 +74,7 @@ function checkKey(e) {
 	}
 }
 
+//function to use a potion of 2 different types
 function usePotion(type){
 	if(type=="health" && character.healthPotions!=0){
 		character.healthPotions--;
@@ -248,21 +249,22 @@ function addToInventory(item) {
 	inventoryContainer.innerText=inventory.toString();
 }
 
+//function to add an entity to the array
 function addToLivingEntities(entity) {
 	livingEntities.push(entity);
 }
+
+//function to remove an entity from the array
 function removeLivingEntity(entity){
 	var temp = [];
 	ctx.clearRect(entity.position[0],entity.position[1],20,40);
 	var x = livingEntities.length;
 	for(var i = 0;i < x; i++){
-		//alert((i+1)+"/"+x);
 		temp.push(livingEntities.shift());
 		if(temp[temp.length-1]==entity){
 			temp.pop();
 		}
 	}
-	//alert(temp.length-1+" enemies remaining")
 	livingEntities=temp;
 }
 
@@ -376,19 +378,21 @@ function addPoints() {
 
 }
 
+//function spawns enemies in the map
 function spawnEnemies(){
-	//alert("spawn called");
 	var numEnemies=6+(level/2);
 	for(var i = 1; i < numEnemies; i++){
+		//create enemies and give them stats
 		var enemy = new Object();
 		enemy.id=i;
 		enemy.position=getRandomPosition();
 		enemy.strength=level;
 		enemy.health=10;
 		enemy.type="closeRange";
+		//add them to the array of living entites
 		addToLivingEntities(enemy);
+		//draw person with red rectangle to symbolize bad guy
 		ctx.drawImage(person,enemy.position[0],enemy.position[1],20,40);
-		// Red rectangle
 		ctx.beginPath();
 		ctx.lineWidth = "1";
 		ctx.strokeStyle = "red";
@@ -397,7 +401,8 @@ function spawnEnemies(){
 	}
 }
 
-function getRandomPosition(){//should ensure no enemies overlap on spawn with eachother or with character
+//function to ensure no enemies overlap on spawn with eachother or with character
+function getRandomPosition(){
 	var x = Math.floor(Math.random() * 135);
 	var y = Math.floor(Math.random() * 65);
 	for(var i = 0; i < livingEntities.length;i++){
@@ -410,8 +415,9 @@ function getRandomPosition(){//should ensure no enemies overlap on spawn with ea
 	return [x*10,y*10];
 }
 
+//function attacks an enemy standing directly next to player, will add functionality for archer later
 function attack() {
-	if(facing=="up"){//error here
+	if(facing=="up"){
 		var enemy=enemyAdjacent("up");
 		enemy.health-=10;
 		if(enemy.health==0){
