@@ -169,13 +169,13 @@ function move(direction){
 
 //a function that verifies a players ability to move
 function clearPath(direction){
-	if(direction=="right" && (xPos==1380 || enemyAdjacent("right"))) {
+	if(direction=="right" && (xPos==1380 || enemyAdjacent("right")!=null)) {
 		return false;
-	}else if(direction == "left" && (xPos==0 || enemyAdjacent("left"))) {
+	}else if(direction == "left" && (xPos==0 || enemyAdjacent("left")!=null)) {
 		return false;
-	}else if(direction == "down" && (yPos==660 || enemyAdjacent("down"))) {
+	}else if(direction == "down" && (yPos==660 || enemyAdjacent("down")!=null)) {
 		return false;
-	}else if(direction =="up" && (yPos==0 || enemyAdjacent("up"))) {
+	}else if(direction =="up" && (yPos==0 || enemyAdjacent("up")!=null)) {
 		return false;
 	}
 	return true;
@@ -188,31 +188,31 @@ function enemyAdjacent(direction){
 			if(direction=="right"){
 				if(livingEntities[i].position[0]==xPos+20){
 					if(livingEntities[i].position[1]<yPos+40 && livingEntities[i].position[1]>yPos-40){
-						return true;
+						return livingEntities[i];
 					}
 				}
 			}else if(direction=="left"){
 				if(livingEntities[i].position[0]==xPos-20){
 					if(livingEntities[i].position[1]<yPos+40 && livingEntities[i].position[1]>yPos-40){
-						return true;
+						return livingEntities[i];
 					}
 				}
 			}else if(direction=="up"){
 				if(livingEntities[i].position[0]<xPos+20 && livingEntities[i].position[0]>xPos-20){
 					if(livingEntities[i].position[1]==yPos-40){
-						return true;
+						return livingEntities[i];
 					}
 				}
 			}else if(direction=="down"){
 				if(livingEntities[i].position[0]<xPos+20 && livingEntities[i].position[0]>xPos-20){
 					if(livingEntities[i].position[1]==yPos+40){
-						return true;
+						return livingEntities[i];
 					}
 				}
 			}
 		}
 	}
-	return false;
+	return null;
 }
 
 function drawInventoryMap() {
@@ -248,6 +248,20 @@ function addToInventory(item) {
 
 function addToLivingEntities(entity) {
 	livingEntities.push(entity);
+}
+function removeLivingEntity(entity){
+	var temp = [];
+	ctx.clearRect(entity.position[0],entity.position[1],20,40);
+	var x = livingEntities.length;
+	for(var i = 0;i < x; i++){
+		//alert((i+1)+"/"+x);
+		temp.push(livingEntities.shift());
+		if(temp[temp.length-1]==entity){
+			temp.pop();
+		}
+	}
+	//alert(temp.length-1+" enemies remaining")
+	livingEntities=temp;
 }
 
 function useRune() {
@@ -366,7 +380,7 @@ function spawnEnemies(){
 		enemy.id=i;
 		enemy.position=[10*x,10*y];
 		enemy.strength=level;
-		enemy.health=100;
+		enemy.health=10;
 		enemy.type="closeRange";
 		addToLivingEntities(enemy);
 		ctx.drawImage(person,enemy.position[0],enemy.position[1],20,40);
@@ -392,16 +406,33 @@ function attack() {
 	// 	alert("no enemies near");
 	// }
 
-	ctx.beginPath();
-	if(facing=="up"){
-		ctx.rect(xPos+6,yPos-10,stepPixels,stepPixels);
+	if(facing=="up"){//error here
+		var enemy=enemyAdjacent("up");
+		alert(enemy.health);
+		enemy.health-=10;
+		if(enemy.health==0){
+			removeLivingEntity(enemy);
+		}
 	}else if(facing=="right"){
-		ctx.rect(xPos+22,yPos+25,stepPixels,stepPixels);
+		var enemy=enemyAdjacent("right");
+		alert(enemy.health);
+		enemy.health-=10;
+		if(enemy.health==0){
+			removeLivingEntity(enemy);
+		}
 	}else if(facing=="left"){
-		ctx.rect(xPos-10,yPos+25,stepPixels,stepPixels);
+		var enemy=enemyAdjacent("left");
+		alert(enemy.health);
+		enemy.health-=10;
+		if(enemy.health==0){
+			removeLivingEntity(enemy);
+		}
 	}else if (facing=="down"){
-		ctx.rect(xPos+6,yPos+50,stepPixels,stepPixels);
+		var enemy=enemyAdjacent("down");
+		alert(enemy.health);
+		enemy.health-=10;
+		if(enemy.health==0){
+			removeLivingEntity(enemy);
+		}
 	}	
-	ctx.fillStyle="red";
-	ctx.fill();
 }
