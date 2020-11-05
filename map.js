@@ -111,22 +111,22 @@ function usePotion(type){
 //function that handles arrow key presses
 function move(direction){
 	facing=direction;
-	if(direction=="right" && xPos!=1370){
+	if(direction=="right" && clearPath(direction)){ //&& xPos!=1370
 		ctx.clearRect(xPos-10,yPos-10,42,70);
 		ctx.drawImage(person,xPos+stepPixels,yPos);
 		xPos+=stepPixels;
 	}
-	else if(direction=="left" && xPos!=stepPixels){
+	else if(direction=="left" && clearPath(direction)){ //&& xPos!=stepPixels  
 		ctx.clearRect(xPos-10,yPos-10,42,70);
 		ctx.drawImage(person,xPos-stepPixels,yPos);
 		xPos-=stepPixels;
 	}
-	else if(direction=="down" && yPos!=640){
+	else if(direction=="down" && clearPath(direction)){ //&& yPos!=640
 		ctx.clearRect(xPos-10,yPos-10,42,70);
 		ctx.drawImage(person,xPos,yPos+stepPixels);
 		yPos+=stepPixels;
 	}
-	else if(direction=="up" && yPos!=stepPixels){
+	else if(direction=="up" && clearPath(direction)){ //&& yPos!=stepPixels
 		ctx.clearRect(xPos-10,yPos-10,42,70);
 		ctx.drawImage(person,xPos,yPos-stepPixels);
 		yPos-=stepPixels;
@@ -182,6 +182,14 @@ function move(direction){
 		}
 	}
 	drawInventoryMap();
+}
+
+function clearPath(direction){
+	if(direction=="right" && xPos==1370) return false;
+	else if(direction == "left" && xPos==0) return false;
+	else if(direction=="down" && yPos==640) return false;
+	else if(direction =="up" && yPos==0) return false;
+	return true;
 }
 
 function drawInventoryMap() {
@@ -328,13 +336,20 @@ function initializeInventory() {
 function spawnEnemies(){
 	//alert("spawn called");
 	var numEnemies=3+(level/2);
-	for(var i = 0; i < numEnemies; i++){
+	for(var i = 1; i < numEnemies; i++){
 		var enemy = new Object();
-		enemy.position=[100*i,100*i];
+		var x = Math.floor(Math.random() * 135);
+		var y = Math.floor(Math.random() * 65);
+		enemy.position=[10*x,10*y];
 		enemy.strength=level;
 		enemy.type="closeRange";
 		ctx.drawImage(person,enemy.position[0],enemy.position[1]);
-		//ctx.drawImage(image,100*i,100*i);
+		// Red rectangle
+		ctx.beginPath();
+		ctx.lineWidth = "2";
+		ctx.strokeStyle = "red";
+		ctx.rect(enemy.position[0], enemy.position[1], 22, 44);
+		ctx.stroke();
 	}
 }
 
