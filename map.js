@@ -88,6 +88,10 @@ function checkKey(e) {
 		// alert("N pressed");
 		usePotion("mana");
 	}
+	else if (e.keyCode == '32') {
+		// space bar
+		attack();
+	}
 }
 
 function usePotion(type){
