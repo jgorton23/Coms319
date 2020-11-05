@@ -370,6 +370,10 @@ function initializeInventory() {
 	drawInventoryMap();
 }
 
+function addPoints() {
+
+}
+
 function spawnEnemies(){
 	//alert("spawn called");
 	var numEnemies=3+(level/2);
