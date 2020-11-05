@@ -6,16 +6,10 @@
         <!--<link rel="stylesheet" href="style.css">-->
     </head>
     <body style="text-align: center;" onload="initializeGame()">
-    <div style="float: right">
-        Inventory
-        <div id="inventoryContent">
-            Empty
-        </div>
-    </div>
          
-        <h1>
+        <!-- <h1>
             Map
-        </h1>
+        </h1> -->
         <!-- Here is the progress bar: health/mana bar  -->
         <div style="float: left;">
             <label for="healthBar">Health</label>
@@ -24,8 +18,15 @@
             <progress id="manaBar" max="100" value="50"> 100% </progress>
         </div>
         
+        <div style="float: right">
+            Inventory
+            <div id="inventoryContent">
+                Empty
+            </div>
+        </div>
+
         <canvas id="myCanvas" width="1400" height="700" style="border:10px solid #000000;"></canvas>
-        <img id="person" src="Stick_Person.png" alt="person" width="22" height="44">
+        <!-- <img id="person" src="Stick_Person.png" alt="person" width="22" height="44"> -->
 
         <script src="map.js"></script>
     </body><!--- A new Comment --->

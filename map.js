@@ -9,9 +9,10 @@ var yPos = 330; //the Y coordinate of the character
 var facing = "right"; //direction player last moved, used for directing
 var canvas = document.getElementById("myCanvas"); //the canvas that is the map
 var ctx = canvas.getContext("2d"); //canvas editor
-var image = document.getElementById("person"); //the image of the character
 var inventory = []; //the inventory array of the character
 var inventoryContainer = document.getElementById("inventoryContent");
+const person = new Image(); // the image of the player
+person.src='./Stick_Person.png';
 const numAlgiz = 5;
 const numMannaz = 5;
 const numDagaz = 5;
@@ -33,7 +34,7 @@ function initializeGame() {
 //function is unnecessar unless we create a map more complicated than one big room
 //the only thing it does rn is spawn the character
 function createMap() {
-	ctx.drawImage(image,xPos,yPos);
+	ctx.drawImage(person,xPos,yPos);
 	//ctx.drawImage(image, 50, 330);
 	// for(var i=0; i<(widthPixels); i+=stepPixels){
 	// 	for(var j=0; j<heightPixels; j+=stepPixels){
@@ -112,22 +113,22 @@ function move(direction){
 	facing=direction;
 	if(direction=="right" && xPos!=1370){
 		ctx.clearRect(xPos-10,yPos-10,42,70);
-		ctx.drawImage(image,xPos+stepPixels,yPos);
+		ctx.drawImage(person,xPos+stepPixels,yPos);
 		xPos+=stepPixels;
 	}
 	else if(direction=="left" && xPos!=stepPixels){
 		ctx.clearRect(xPos-10,yPos-10,42,70);
-		ctx.drawImage(image,xPos-stepPixels,yPos);
+		ctx.drawImage(person,xPos-stepPixels,yPos);
 		xPos-=stepPixels;
 	}
 	else if(direction=="down" && yPos!=640){
 		ctx.clearRect(xPos-10,yPos-10,42,70);
-		ctx.drawImage(image,xPos,yPos+stepPixels);
+		ctx.drawImage(person,xPos,yPos+stepPixels);
 		yPos+=stepPixels;
 	}
 	else if(direction=="up" && yPos!=stepPixels){
 		ctx.clearRect(xPos-10,yPos-10,42,70);
-		ctx.drawImage(image,xPos,yPos-stepPixels);
+		ctx.drawImage(person,xPos,yPos-stepPixels);
 		yPos-=stepPixels;
 	}
 	if((xPos+yPos)%500===0) {
@@ -332,10 +333,7 @@ function spawnEnemies(){
 		enemy.position=[100*i,100*i];
 		enemy.strength=level;
 		enemy.type="closeRange";
-		ctx.beginPath();
-		ctx.rect(enemy.position[0],enemy.position[1],stepPixels,stepPixels);
-		ctx.fillStyle="red";
-		ctx.fill();
+		ctx.drawImage(person,enemy.position[0],enemy.position[1]);
 		//ctx.drawImage(image,100*i,100*i);
 	}
 }
