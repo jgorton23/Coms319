@@ -111,6 +111,7 @@ function usePotion(type){
 //function that handles arrow key presses
 function move(direction){
 	facing=direction;
+	// alert(clearPath("down"));
 	if(direction=="right" && clearPath(direction)){ //&& xPos!=1370
 		ctx.clearRect(xPos-10,yPos-10,42,70);
 		ctx.drawImage(person,xPos+stepPixels,yPos);
@@ -184,12 +185,23 @@ function move(direction){
 	drawInventoryMap();
 }
 
+//a function that verifies a players ability to move
 function clearPath(direction){
-	if(direction=="right" && xPos==1370) return false;
-	else if(direction == "left" && xPos==0) return false;
-	else if(direction=="down" && yPos==640) return false;
-	else if(direction =="up" && yPos==0) return false;
+	if(direction=="right" && (xPos==1370 || enemyAdjacent("right"))) {
+		return false;
+	}else if(direction == "down" && (xPos==0 || enemyAdjacent("left"))) {
+		return false;
+	}else if(direction == "left" && (yPos==640 || enemyAdjacent("down"))) {
+		return false;
+	}else if(direction =="up" && (yPos==0 || enemyAdjacent("up"))) {
+		return false;
+	}
 	return true;
+}
+
+//function that tells if an enemy is adjacent, useful for verifying ability to move, and attack
+function enemyAdjacent(direction){
+	return false;
 }
 
 function drawInventoryMap() {
