@@ -34,7 +34,7 @@ function initializeGame() {
 //function is unnecessar unless we create a map more complicated than one big room
 //the only thing it does rn is spawn the character
 function createMap() {
-	ctx.drawImage(person,xPos,yPos);
+	ctx.drawImage(person,xPos,yPos,20,40);
 	//ctx.drawImage(image, 50, 330);
 	// for(var i=0; i<(widthPixels); i+=stepPixels){
 	// 	for(var j=0; j<heightPixels; j+=stepPixels){
@@ -91,23 +91,27 @@ function move(direction){
 	facing=direction;
 	// alert(clearPath("down"));
 	if(direction=="right" && clearPath(direction)){ //&& xPos!=1370
-		ctx.clearRect(xPos-10,yPos-10,42,70);
-		ctx.drawImage(person,xPos+stepPixels,yPos);
+		ctx.clearRect(xPos,yPos,20,40);
+		//ctx.clearRect(xPos-10,yPos-10,42,70);
+		ctx.drawImage(person,xPos+stepPixels,yPos,20,40);
 		xPos+=stepPixels;
 	}
-	else if(direction=="left" && clearPath(direction)){ //&& xPos!=stepPixels  
-		ctx.clearRect(xPos-10,yPos-10,42,70);
-		ctx.drawImage(person,xPos-stepPixels,yPos);
+	else if(direction=="left" && clearPath(direction)){ //&& xPos!=stepPixels 
+		ctx.clearRect(xPos,yPos,20,40); 
+		//ctx.clearRect(xPos-10,yPos-10,42,70);
+		ctx.drawImage(person,xPos-stepPixels,yPos,20,40);
 		xPos-=stepPixels;
 	}
 	else if(direction=="down" && clearPath(direction)){ //&& yPos!=640
-		ctx.clearRect(xPos-10,yPos-10,42,70);
-		ctx.drawImage(person,xPos,yPos+stepPixels);
+		ctx.clearRect(xPos,yPos,20,40);
+		//ctx.clearRect(xPos-10,yPos-10,42,70);
+		ctx.drawImage(person,xPos,yPos+stepPixels,20,40);
 		yPos+=stepPixels;
 	}
 	else if(direction=="up" && clearPath(direction)){ //&& yPos!=stepPixels
-		ctx.clearRect(xPos-10,yPos-10,42,70);
-		ctx.drawImage(person,xPos,yPos-stepPixels);
+		ctx.clearRect(xPos,yPos,20,40); // exactly person sized
+		//ctx.clearRect(xPos-10,yPos-10,42,70); //bigger rectangle to erase attack
+		ctx.drawImage(person,xPos,yPos-stepPixels,20,40);
 		yPos-=stepPixels;
 	}
 	if((xPos+yPos)%500===0) {
@@ -165,11 +169,11 @@ function move(direction){
 
 //a function that verifies a players ability to move
 function clearPath(direction){
-	if(direction=="right" && (xPos==1370 || enemyAdjacent("right"))) {
+	if(direction=="right" && (xPos==1380 || enemyAdjacent("right"))) {
 		return false;
-	}else if(direction == "down" && (xPos==0 || enemyAdjacent("left"))) {
+	}else if(direction == "left" && (xPos==0 || enemyAdjacent("left"))) {
 		return false;
-	}else if(direction == "left" && (yPos==640 || enemyAdjacent("down"))) {
+	}else if(direction == "down" && (yPos==660 || enemyAdjacent("down"))) {
 		return false;
 	}else if(direction =="up" && (yPos==0 || enemyAdjacent("up"))) {
 		return false;
@@ -179,6 +183,35 @@ function clearPath(direction){
 
 //function that tells if an enemy is adjacent, useful for verifying ability to move, and attack
 function enemyAdjacent(direction){
+	for(var i = 0; i < livingEntities.length; i++){
+		if(livingEntities[i].id!=null){
+			if(direction=="right"){
+				if(livingEntities[i].position[0]==xPos+20){
+					if(livingEntities[i].position[1]<yPos+40 && livingEntities[i].position[1]>yPos-40){
+						return true;
+					}
+				}
+			}else if(direction=="left"){
+				if(livingEntities[i].position[0]==xPos-20){
+					if(livingEntities[i].position[1]<yPos+40 && livingEntities[i].position[1]>yPos-40){
+						return true;
+					}
+				}
+			}else if(direction=="up"){
+				if(livingEntities[i].position[0]<xPos+20 && livingEntities[i].position[0]>xPos-20){
+					if(livingEntities[i].position[1]==yPos-40){
+						return true;
+					}
+				}
+			}else if(direction=="down"){
+				if(livingEntities[i].position[0]<xPos+20 && livingEntities[i].position[0]>xPos-20){
+					if(livingEntities[i].position[1]==yPos+40){
+						return true;
+					}
+				}
+			}
+		}
+	}
 	return false;
 }
 
@@ -330,15 +363,18 @@ function spawnEnemies(){
 		var enemy = new Object();
 		var x = Math.floor(Math.random() * 135);
 		var y = Math.floor(Math.random() * 65);
+		enemy.id=i;
 		enemy.position=[10*x,10*y];
 		enemy.strength=level;
+		enemy.health=100;
 		enemy.type="closeRange";
-		ctx.drawImage(person,enemy.position[0],enemy.position[1]);
+		addToLivingEntities(enemy);
+		ctx.drawImage(person,enemy.position[0],enemy.position[1],20,40);
 		// Red rectangle
 		ctx.beginPath();
-		ctx.lineWidth = "2";
+		ctx.lineWidth = "1";
 		ctx.strokeStyle = "red";
-		ctx.rect(enemy.position[0], enemy.position[1], 22, 44);
+		ctx.rect(enemy.position[0]+2, enemy.position[1]+2, 16, 36);
 		ctx.stroke();
 	}
 }
