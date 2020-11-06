@@ -1,3 +1,6 @@
+module.exports = updateStartPos;
+
+
 var livingEntities = [];
 var character = new Object();
 var address;
@@ -50,7 +53,7 @@ function loadNewRoom() {
 }
 
 
-//function is unnecessar unless we create a map more complicated than one big room
+//function is unnecessary unless we create a map more complicated than one big room
 //the only thing it does rn is spawn the character
 function createMap() {
 	ctx.drawImage(person,startxPos,startyPos,20,40);
@@ -140,7 +143,7 @@ function move(direction){
 			loadNewRoom();
 			spawnSide = "bottom";
 		}
-		updateStartPos();
+		updateStartPos(spawnSide);
 	}
 	
 	facing=direction;
@@ -537,20 +540,20 @@ function createDoors() {
 	ctx.fill();
 }
 
-function updateStartPos() {
-	if (spawnSide == "top"){
+function updateStartPos(spawnSideArg) {
+	if (spawnSideArg == "top"){
 		startxPos = 650;
 		startyPos = 0;
 	}
-	else if (spawnSide == "left") {
+	else if (spawnSideArg == "left") {
 		startxPos = 0;
 		startyPos = 340;
 	}
-	else if (spawnSide == "right") {
+	else if (spawnSideArg == "right") {
 		startxPos = 1390;
 		startyPos = 340;
 	}
-	else if (spawnSide == "bottom") {
+	else if (spawnSideArg == "bottom") {
 		startxPos = 650;
 		startyPos = 690;
 	}
