@@ -5,6 +5,9 @@ var information;
 var informationArray;
 var paused = false; // for the enemies to move i use a timer that can be paused, and this variable is so i can also stop the users movements
 var level = 1; //the level(room) that the player is on currently
+var startxPos = 670;
+var startyPos = 360;
+var spawnSide = "";
 var xPos = 10; //the X coordinate of the character
 var yPos = 330; //the Y coordinate of the character
 character.position=[xPos,yPos];//for more continutity of entites
@@ -32,12 +35,26 @@ function initializeGame() {
 	spawnEnemies();
 	initializeInventory();
 	pause();
+	checkIfRoomClear();
 }
+
+
+function loadNewRoom() {
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	createMap();
+	spawnEnemies();
+	initializeInventory();
+	pause();
+	checkIfRoomClear();
+}
+
 
 //function is unnecessar unless we create a map more complicated than one big room
 //the only thing it does rn is spawn the character
 function createMap() {
-	ctx.drawImage(person,xPos,yPos,20,40);
+	ctx.drawImage(person,startxPos,startyPos,20,40);
+	xPos = startxPos;
+	yPos = startyPos;
 	//ctx.drawImage(image, 50, 330);
 	// for(var i=0; i<(widthPixels); i+=stepPixels){
 	// 	for(var j=0; j<heightPixels; j+=stepPixels){
@@ -73,6 +90,7 @@ function checkKey(e) {
 		usePotion("mana");
 	}else if (e.keyCode == '32') {// space bar
 		attack();
+		checkIfRoomClear();
 	}
 }
 
@@ -92,6 +110,38 @@ function usePotion(type){
 
 //function that handles arrow key presses
 function move(direction){
+	if (livingEntities.length == 1)	{
+		//top door
+		//630 - 750
+		//10
+		if ((xPos >= 630  && xPos <= 750) && yPos == 10) {
+			loadNewRoom();
+			spawnSide = "top";
+		}
+		//left door
+		//10
+		//310 - 430
+		else if ((yPos >= 310  && yPos <= 430) && xPos == 10) {
+			loadNewRoom();
+			spawnSide = "left";
+		}
+		//right door
+		//1370
+		//310 - 430
+		else if ((yPos >= 310  && yPos <= 430) && xPos == 1370) {
+			loadNewRoom();
+			spawnSide = "right";
+		}
+		//bottom door
+		//630 - 750
+		//650
+		else if ((xPos >= 630  && xPos <= 750) && yPos == 650) {
+			loadNewRoom();
+			spawnSide = "bottom";
+		}
+		updateStartPos();
+	}
+	
 	facing=direction;
 	// alert(clearPath("down"));
 	if(direction=="right" && clearPath(direction)){ //&& xPos!=1370
@@ -254,6 +304,12 @@ function addToInventory(item) {
 //function to add an entity to the array
 function addToLivingEntities(entity) {
 	livingEntities.push(entity);
+}
+
+function checkIfRoomClear() {
+	if (livingEntities.length == 1) {
+		createDoors();
+	}
 }
 
 //function to remove an entity from the array
@@ -444,6 +500,48 @@ function attack() {
 			removeLivingEntity(enemy);
 		}
 	}	
+}
+
+function createDoors() {
+	//top door
+	ctx.beginPath();
+	ctx.rect(650,0,100,10);
+	ctx.fillStyle="brown";
+	ctx.fill();
+	//left door
+	ctx.beginPath();
+	ctx.rect(0,340,10,100);
+	ctx.fillStyle="brown";
+	ctx.fill();
+	//right door
+	ctx.beginPath();
+	ctx.rect(1390,340,10,100);
+	ctx.fillStyle="brown";
+	ctx.fill();
+	//bottom door
+	ctx.beginPath();
+	ctx.rect(650,690,100,10);
+	ctx.fillStyle="brown";
+	ctx.fill();
+}
+
+function updateStartPos() {
+	if (spawnSide == "top"){
+		startxPos = 650;
+		startyPos = 0;
+	}
+	else if (spawnSide == "left") {
+		startxPos = 0;
+		startyPos = 340;
+	}
+	else if (spawnSide == "right") {
+		startxPos = 1390;
+		startyPos = 340;
+	}
+	else if (spawnSide == "bottom") {
+		startxPos = 650;
+		startyPos = 690;
+	}
 }
 
 function pause(){
