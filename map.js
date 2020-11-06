@@ -382,7 +382,7 @@ function addPoints() {
 
 //function spawns enemies in the map
 function spawnEnemies(){
-	var numEnemies=6+(level/2);
+	var numEnemies=1+(level/2);
 	for(var i = 1; i < numEnemies; i++){
 		//create enemies and give them stats
 		var enemy = new Object();
@@ -394,12 +394,13 @@ function spawnEnemies(){
 		//add them to the array of living entites
 		addToLivingEntities(enemy);
 		//draw person with red rectangle to symbolize bad guy
-		ctx.drawImage(person,enemy.position[0],enemy.position[1],20,40);
-		ctx.beginPath();
-		ctx.lineWidth = "1";
-		ctx.strokeStyle = "red";
-		ctx.rect(enemy.position[0]+2, enemy.position[1]+2, 16, 36);
-		ctx.stroke();
+		drawEnemy(enemy.position[0],enemy.position[1]);
+		// ctx.drawImage(person,enemy.position[0],enemy.position[1],20,40);
+		// ctx.beginPath();
+		// ctx.lineWidth = "1";
+		// ctx.strokeStyle = "red";
+		// ctx.rect(enemy.position[0]+2, enemy.position[1]+2, 16, 36);
+		// ctx.stroke();
 	}
 }
 
@@ -454,25 +455,76 @@ function pause(){
 		timer=setInterval(function updateGame(){
 			document.getElementById("here").innerHTML=q--; //also just to test timer
 			for(var i = 0; i < livingEntities.length; i++){
-				if(livingEntities[i]==enemyAdjacent("right") || livingEntities[i]==enemyAdjacent("left") || livingEntities[i]==enemyAdjacent("up") || livingEntities[i]==enemyAdjacent("down")){
-					enemyAttack();
-				}
-				else{
-					enemyMove();
+				if(livingEntities[i]!=character){
+					if(livingEntities[i]==enemyAdjacent("right") || livingEntities[i]==enemyAdjacent("left") || livingEntities[i]==enemyAdjacent("up") || livingEntities[i]==enemyAdjacent("down")){
+						enemyAttack();
+					}
+					else{
+						enemyMove(livingEntities[i]);
+					}
 				}
 			}
-		},1000);
+		},100);
 	}else{
 		document.getElementById("timer").value="Resume";
 		clearInterval(timer);
 	}
 }
 
+//function that does damage to the player when an enemy hits them
 function enemyAttack(){
-	character.health -= character.health/10;
+	character.health -= 10;
 	document.getElementById("healthBar").setAttribute("value",100*(character.health/character.maxHealth));
 }
 
-function enemyMove(){
+//function that allows enemies to move toward the user to attack
+function enemyMove(enemy){
+	var direction;
+	if(character.position[0]-enemy.position[0]==0){
+		if(character.position[1]-enemy.position[1]<0){
+			direction="up";
+		}else{
+			direction="down";
+		}
+	}else if(character.position[1]-enemy.position[1]==0){
+		if(character.position[0]-enemy.position[0]<0){
+			direction="left";
+		}else{
+			direction="right";
+		}
+	}
+	if(direction=="right" && clearPath(direction)){ //change clear path function to accept a 2nd parameter of entity, so that clear path checks per user/enemy
+		ctx.clearRect(enemy.position[0],enemy.position[1],20,40);
+		//ctx.clearRect(xPos-10,yPos-10,42,70);
+		//ctx.drawImage(person,xPos+stepPixels,yPos,20,40);
+		drawEnemy(enemy.position[0]+10,enemy.position[1]);
+		enemy.position[0]+=stepPixels;
+	}
+	else if(direction=="left" && clearPath(direction)){
+		ctx.clearRect(enemy.position[0],enemy.position[1],20,40);
+		//ctx.clearRect(xPos-10,yPos-10,42,70);
+		drawEnemy(enemy.position[0]-10,enemy.position[1]);
+		enemy.position[0]-=stepPixels;
+	}
+	else if(direction=="down" && clearPath(direction)){
+		ctx.clearRect(enemy.position[0],enemy.position[1],20,40);
+		//ctx.clearRect(xPos-10,yPos-10,42,70);
+		drawEnemy(enemy.position[0],enemy.position[1]+10);
+		enemy.position[1]+=stepPixels;
+	}
+	else if(direction=="up" && clearPath(direction)){
+		ctx.clearRect(enemy.position[0],enemy.position[1],20,40);// exactly person sized
+		//ctx.clearRect(xPos-10,yPos-10,42,70); //bigger rectangle to erase attack
+		drawEnemy(enemy.position[0],enemy.position[1]-10);
+		enemy.position[1]-=stepPixels;
+	}
+}
 
+function drawEnemy(x,y){
+	ctx.drawImage(person,x,y,20,40);
+	ctx.beginPath();
+	ctx.lineWidth = "1";
+	ctx.strokeStyle = "red";
+	ctx.rect(x+2, y+2, 16, 36);
+	ctx.stroke();
 }
