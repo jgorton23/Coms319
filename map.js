@@ -607,7 +607,7 @@ function enemyMove(enemy){
 			direction="right";
 		}
 	}else if(character.position[0]-enemy.position[0]<0){//if enemy is to the right
-		if(Math.round(Math.abs(character.position[0]-enemy.position[0])/Math.abs(character.position[1]-enemy.position[1]))<1){//if enemy is more right than above or below
+		if(Math.floor(Math.abs(character.position[0]-enemy.position[0])/Math.abs(character.position[1]-enemy.position[1]))>1){//if enemy is more right than above or below
 			direction="left";
 		}else{
 			if(character.position[1]-enemy.position[1]<0){//if enemy is more below
@@ -617,7 +617,7 @@ function enemyMove(enemy){
 			}
 		}
 	}else if(character.position[0]-enemy.position[0]>0){//if enemy is to the left
-		if(Math.round((character.position[0]-enemy.position[0])/Math.abs(character.position[1]-enemy.position[1]))<1){//if enemy is more left than above or below
+		if(Math.floor((character.position[0]-enemy.position[0])/Math.abs(character.position[1]-enemy.position[1]))>1){//if enemy is more left than above or below
 			direction="right";
 		}else{
 			if(character.position[1]-enemy.position[1]<0){//if enemy is more below
