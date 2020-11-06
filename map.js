@@ -17,14 +17,18 @@ character.position=[xPos,yPos];//for more continutity of entites
 var facing = "right"; //direction player last moved, used for directing
 var canvas = document.getElementById("myCanvas"); //the canvas that is the map
 var ctx = canvas.getContext("2d"); //canvas editor
-var inventory = []; //the inventory array of the character
+var inventory = {}; //the inventory array of the character
 var inventoryContainer = document.getElementById("inventoryContent");
+var points = 0;
+var pointsContainer = document.getElementById("pointsContent");
 var inventoryMap = [];
 const person = new Image(); // the image of the player
 person.src='./Stick_Person.png';
 const numAlgiz = 5;
 const numMannaz = 5;
 const numDagaz = 5;
+const numGoldCoins = 5;
+const numCoal = 5;
 const heightPixels = 700;
 const widthPixels = 1400;
 const stepPixels = 10;
@@ -202,28 +206,48 @@ function move(direction){
 	let row = yPos/stepPixels;
 	let col = xPos/stepPixels;
 	console.log(yPos, row, xPos, col);
+	if (inventoryMap[row][col] === 104) {
+		inventoryMap[row][col] = 0;
+		addToInventory("Gold");
+		addPoints(100);
+	}
+	if (inventoryMap[row][col] === 105) {
+		inventoryMap[row][col] = 0;
+		addToInventory("Coal");
+		addPoints(50);
+	}
 	if(character.currentRune === "") {
 		if (inventoryMap[row][col] === 101) {
 			inventoryMap[row][col] = 0;
 			character.currentRune = "Algiz rune";   //This will damage everything in the room
+			addPoints(200);
 		} else if (inventoryMap[row][col] === 102) {
 			inventoryMap[row][col] = 0;
 			character.currentRune = "Mannaz rune";  //This will double the amount of gold the character is holding
+			inventory["Gold"] *= 2;
+			drawInventory();
+			addPoints(200);
 		} else if (inventoryMap[row][col] === 103) {
 			inventoryMap[row][col] = 0;
 			character.currentRune = "Dagaz rune";   //This will full heal the characters health and mana
+			addPoints(200);
 		}
 	} else {
 		if (inventoryMap[row][col] === 101 && window.confirm("Change Rune?")) {
 			inventoryMap[row][col] = 0;
 			character.currentRune = "Algiz rune";   //This will damage everything in the room
-			console.log(character.currentRune)
+			console.log(character.currentRune);
+			addPoints(200);
 		} else if (inventoryMap[row][col] === 102 && window.confirm("Change Rune?")) {
 			inventoryMap[row][col] = 0;
 			character.currentRune = "Mannaz rune";  //This will double the amount of gold the character is holding
+			inventory["Gold"] *= 2;
+			drawInventory();
+			addPoints(200);
 		} else if (inventoryMap[row][col] === 103 && window.confirm("Change Rune?")) {
 			inventoryMap[row][col] = 0;
 			character.currentRune = "Dagaz rune";   //This will full heal the characters health and mana
+			addPoints(200);
 		}
 	}
 	drawInventoryMap();
@@ -290,13 +314,25 @@ function drawInventoryMap() {
 			if (inventoryMap[row][col] === 102) {
 				ctx.beginPath();
 				ctx.rect(col*stepPixels,row*stepPixels,stepPixels,stepPixels);
-				ctx.fillStyle="orange";
+				ctx.fillStyle="pink";
 				ctx.fill();
 			}
 			if (inventoryMap[row][col] === 103) {
 				ctx.beginPath();
 				ctx.rect(col*stepPixels,row*stepPixels,stepPixels,stepPixels);
-				ctx.fillStyle="pink";
+				ctx.fillStyle="green";
+				ctx.fill();
+			}
+			if (inventoryMap[row][col] === 104) {
+				ctx.beginPath();
+				ctx.rect(col*stepPixels,row*stepPixels,stepPixels,stepPixels);
+				ctx.fillStyle="yellow";
+				ctx.fill();
+			}
+			if (inventoryMap[row][col] === 105) {
+				ctx.beginPath();
+				ctx.rect(col*stepPixels,row*stepPixels,stepPixels,stepPixels);
+				ctx.fillStyle="gray";
 				ctx.fill();
 			}
 		}
@@ -304,8 +340,20 @@ function drawInventoryMap() {
 }
 
 function addToInventory(item) {
-	inventory.push(item);
-	inventoryContainer.innerText=inventory.toString();
+	inventory[item] += 1;
+	drawInventory();
+}
+
+function drawInventory() {
+	let string = "";
+	string += "Gold: " + inventory["Gold"] + "\n";
+	string += "Coal: " + inventory["Coal"];
+	inventoryContainer.innerText=string;
+}
+
+function addPoints(value) {
+	points += value;
+	pointsContainer.innerText=points;
 }
 
 //function to add an entity to the array
@@ -438,11 +486,22 @@ function initializeInventory() {
 		console.log(row, col, "103");
 		inventoryMap[row][col] = 103;
 	}
+	for (let i = 0; i < numGoldCoins; i++) {
+		let row = Math.floor(Math.random() * numOfRows);
+		let col = Math.floor(Math.random() * numOfColumns);
+		console.log(row, col, "104");
+		inventoryMap[row][col] = 104;
+	}
+	for (let i = 0; i < numCoal; i++) {
+		let row = Math.floor(Math.random() * numOfRows);
+		let col = Math.floor(Math.random() * numOfColumns);
+		console.log(row, col, "105");
+		inventoryMap[row][col] = 105;
+	}
+	inventory["Gold"] = 0;
+	inventory["Coal"] = 0;
 	drawInventoryMap();
-}
-
-function addPoints() {
-
+	drawInventory();
 }
 
 //function spawns enemies in the map
@@ -513,7 +572,7 @@ function attack() {
 			if(enemy.health==0){
 				removeLivingEntity(enemy);
 			}
-		}	
+		}
 	}
 }
 
@@ -576,6 +635,9 @@ function pause(){
 					else{
 						enemyMove(livingEntities[i]);
 					}
+				}
+				if(character.health === 0){
+					window.location.href = "gameOver.html";
 				}
 			}
 		},250);
