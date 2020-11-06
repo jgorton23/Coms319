@@ -14,7 +14,7 @@ character.position=[xPos,yPos];//for more continutity of entites
 var facing = "right"; //direction player last moved, used for directing
 var canvas = document.getElementById("myCanvas"); //the canvas that is the map
 var ctx = canvas.getContext("2d"); //canvas editor
-var inventory = []; //the inventory array of the character
+var inventory = {}; //the inventory array of the character
 var inventoryContainer = document.getElementById("inventoryContent");
 var points = 0;
 var pointsContainer = document.getElementById("pointsContent");
@@ -25,6 +25,7 @@ const numAlgiz = 5;
 const numMannaz = 5;
 const numDagaz = 5;
 const numGoldCoins = 5;
+const numCoal = 5;
 const heightPixels = 700;
 const widthPixels = 1400;
 const stepPixels = 10;
@@ -207,6 +208,11 @@ function move(direction){
 		addToInventory("Gold");
 		addPoints(100);
 	}
+	if (inventoryMap[row][col] === 105) {
+		inventoryMap[row][col] = 0;
+		addToInventory("Coal");
+		addPoints(50);
+	}
 	if(character.currentRune === "") {
 		if (inventoryMap[row][col] === 101) {
 			inventoryMap[row][col] = 0;
@@ -215,8 +221,9 @@ function move(direction){
 		} else if (inventoryMap[row][col] === 102) {
 			inventoryMap[row][col] = 0;
 			character.currentRune = "Mannaz rune";  //This will double the amount of gold the character is holding
-			points *= 2;
-			addPoints(0);
+			inventory["Gold"] *= 2;
+			drawInventory();
+			addPoints(200);
 		} else if (inventoryMap[row][col] === 103) {
 			inventoryMap[row][col] = 0;
 			character.currentRune = "Dagaz rune";   //This will full heal the characters health and mana
@@ -231,8 +238,9 @@ function move(direction){
 		} else if (inventoryMap[row][col] === 102 && window.confirm("Change Rune?")) {
 			inventoryMap[row][col] = 0;
 			character.currentRune = "Mannaz rune";  //This will double the amount of gold the character is holding
-			points *= 2;
-			addPoints(0);
+			inventory["Gold"] *= 2;
+			drawInventory();
+			addPoints(200);
 		} else if (inventoryMap[row][col] === 103 && window.confirm("Change Rune?")) {
 			inventoryMap[row][col] = 0;
 			character.currentRune = "Dagaz rune";   //This will full heal the characters health and mana
@@ -303,13 +311,13 @@ function drawInventoryMap() {
 			if (inventoryMap[row][col] === 102) {
 				ctx.beginPath();
 				ctx.rect(col*stepPixels,row*stepPixels,stepPixels,stepPixels);
-				ctx.fillStyle="orange";
+				ctx.fillStyle="pink";
 				ctx.fill();
 			}
 			if (inventoryMap[row][col] === 103) {
 				ctx.beginPath();
 				ctx.rect(col*stepPixels,row*stepPixels,stepPixels,stepPixels);
-				ctx.fillStyle="pink";
+				ctx.fillStyle="green";
 				ctx.fill();
 			}
 			if (inventoryMap[row][col] === 104) {
@@ -318,13 +326,26 @@ function drawInventoryMap() {
 				ctx.fillStyle="yellow";
 				ctx.fill();
 			}
+			if (inventoryMap[row][col] === 105) {
+				ctx.beginPath();
+				ctx.rect(col*stepPixels,row*stepPixels,stepPixels,stepPixels);
+				ctx.fillStyle="gray";
+				ctx.fill();
+			}
 		}
 	}
 }
 
 function addToInventory(item) {
-	inventory.push(item);
-	inventoryContainer.innerText=inventory.toString();
+	inventory[item] += 1;
+	drawInventory();
+}
+
+function drawInventory() {
+	let string = "";
+	string += "Gold: " + inventory["Gold"] + "\n";
+	string += "Coal: " + inventory["Coal"];
+	inventoryContainer.innerText=string;
 }
 
 function addPoints(value) {
@@ -468,7 +489,16 @@ function initializeInventory() {
 		console.log(row, col, "104");
 		inventoryMap[row][col] = 104;
 	}
+	for (let i = 0; i < numCoal; i++) {
+		let row = Math.floor(Math.random() * numOfRows);
+		let col = Math.floor(Math.random() * numOfColumns);
+		console.log(row, col, "105");
+		inventoryMap[row][col] = 105;
+	}
+	inventory["Gold"] = 0;
+	inventory["Coal"] = 0;
 	drawInventoryMap();
+	drawInventory();
 }
 
 //function spawns enemies in the map
