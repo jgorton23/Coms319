@@ -16,12 +16,12 @@ var canvas = document.getElementById("myCanvas"); //the canvas that is the map
 var ctx = canvas.getContext("2d"); //canvas editor
 var inventory = []; //the inventory array of the character
 var inventoryContainer = document.getElementById("inventoryContent");
+var inventoryMap = [];
 const person = new Image(); // the image of the player
 person.src='./Stick_Person.png';
 const numAlgiz = 5;
 const numMannaz = 5;
 const numDagaz = 5;
-const inventoryMap = [];
 const heightPixels = 700;
 const widthPixels = 1400;
 const stepPixels = 10;
@@ -40,6 +40,7 @@ function initializeGame() {
 
 
 function loadNewRoom() {
+	inventoryMap = [];
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	createMap();
 	spawnEnemies();
@@ -502,7 +503,6 @@ function attack() {
 	}	
 }
 
-<<<<<<< HEAD
 function createDoors() {
 	//top door
 	ctx.beginPath();
@@ -545,9 +545,7 @@ function updateStartPos() {
 	}
 }
 
-=======
 //function that pauses and starts a timer that controls the enemies' moves
->>>>>>> 989a8c25b63e333372c259c06c34913e3ce94c96
 function pause(){
 	if(document.getElementById("timer").value=="Resume"){
 		document.getElementById("timer").value="Pause";
