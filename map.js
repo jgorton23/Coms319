@@ -146,25 +146,25 @@ function move(direction){
 	facing=direction;
 	// alert(clearPath("down"));
 	if(!paused){
-		if(direction=="right" && clearPath(direction)){ //&& xPos!=1370
+		if(direction=="right" && clearPath(character, direction)){ //&& xPos!=1370
 			ctx.clearRect(xPos,yPos,20,40);
 			//ctx.clearRect(xPos-10,yPos-10,42,70);
 			ctx.drawImage(person,xPos+stepPixels,yPos,20,40);
 			xPos+=stepPixels;
 		}
-		else if(direction=="left" && clearPath(direction)){ //&& xPos!=stepPixels 
+		else if(direction=="left" && clearPath(character, direction)){ //&& xPos!=stepPixels 
 			ctx.clearRect(xPos,yPos,20,40); 
 			//ctx.clearRect(xPos-10,yPos-10,42,70);
 			ctx.drawImage(person,xPos-stepPixels,yPos,20,40);
 			xPos-=stepPixels;
 		}
-		else if(direction=="down" && clearPath(direction)){ //&& yPos!=640
+		else if(direction=="down" && clearPath(character, direction)){ //&& yPos!=640
 			ctx.clearRect(xPos,yPos,20,40);
 			//ctx.clearRect(xPos-10,yPos-10,42,70);
 			ctx.drawImage(person,xPos,yPos+stepPixels,20,40);
 			yPos+=stepPixels;
 		}
-		else if(direction=="up" && clearPath(direction)){ //&& yPos!=stepPixels
+		else if(direction=="up" && clearPath(character, direction)){ //&& yPos!=stepPixels
 			ctx.clearRect(xPos,yPos,20,40); // exactly person sized
 			//ctx.clearRect(xPos-10,yPos-10,42,70); //bigger rectangle to erase attack
 			ctx.drawImage(person,xPos,yPos-stepPixels,20,40);
@@ -227,44 +227,44 @@ function move(direction){
 }
 
 //a function that verifies a players ability to move
-function clearPath(direction){
-	if(direction=="right" && (xPos==1380 || enemyAdjacent("right")!=null)) {
+function clearPath(entity, direction){
+	if(direction=="right" && (entity.position[0]==1380 || enemyAdjacent(entity, "right")!=null)) {
 		return false;
-	}else if(direction == "left" && (xPos==0 || enemyAdjacent("left")!=null)) {
+	}else if(direction == "left" && (entity.position[0]==0 || enemyAdjacent(entity, "left")!=null)) {
 		return false;
-	}else if(direction == "down" && (yPos==660 || enemyAdjacent("down")!=null)) {
+	}else if(direction == "down" && (entity.position[1]==660 || enemyAdjacent(entity, "down")!=null)) {
 		return false;
-	}else if(direction =="up" && (yPos==0 || enemyAdjacent("up")!=null)) {
+	}else if(direction =="up" && (entity.position[1]==0 || enemyAdjacent(entity, "up")!=null)) {
 		return false;
 	}
 	return true;
 }
 
 //function that tells if an enemy is adjacent, useful for verifying ability to move, and attack
-function enemyAdjacent(direction){
+function enemyAdjacent(entity, direction){
 	for(var i = 0; i < livingEntities.length; i++){
-		if(livingEntities[i].id!=null){
+		if(livingEntities[i]!=entity){
 			if(direction=="right"){
-				if(livingEntities[i].position[0]==xPos+20){
-					if(livingEntities[i].position[1]<yPos+40 && livingEntities[i].position[1]>yPos-40){
+				if(livingEntities[i].position[0]==entity.position[0]+20){
+					if(livingEntities[i].position[1]<entity.position[1]+40 && livingEntities[i].position[1]>entity.position[1]-40){
 						return livingEntities[i];
 					}
 				}
 			}else if(direction=="left"){
-				if(livingEntities[i].position[0]==xPos-20){
-					if(livingEntities[i].position[1]<yPos+40 && livingEntities[i].position[1]>yPos-40){
+				if(livingEntities[i].position[0]==entity.position[0]-20){
+					if(livingEntities[i].position[1]<entity.position[1]+40 && livingEntities[i].position[1]>entity.position[1]-40){
 						return livingEntities[i];
 					}
 				}
 			}else if(direction=="up"){
-				if(livingEntities[i].position[0]<xPos+20 && livingEntities[i].position[0]>xPos-20){
-					if(livingEntities[i].position[1]==yPos-40){
+				if(livingEntities[i].position[0]<entity.position[0]+20 && livingEntities[i].position[0]>entity.position[0]-20){
+					if(livingEntities[i].position[1]==entity.position[1]-40){
 						return livingEntities[i];
 					}
 				}
 			}else if(direction=="down"){
-				if(livingEntities[i].position[0]<xPos+20 && livingEntities[i].position[0]>xPos-20){
-					if(livingEntities[i].position[1]==yPos+40){
+				if(livingEntities[i].position[0]<entity.position[0]+20 && livingEntities[i].position[0]>entity.position[0]-20){
+					if(livingEntities[i].position[1]==entity.position[1]+40){
 						return livingEntities[i];
 					}
 				}
@@ -479,7 +479,7 @@ function getRandomPosition(){
 function attack() {
 	if(!paused){
 		if(facing=="up"){
-			var enemy=enemyAdjacent("up");
+			var enemy=enemyAdjacent(character, "up");
 			enemy.health-=10;
 			ctx.clearRect(enemy.position[0],enemy.position[1]+40,20,4);
 			drawHealthBar(enemy);
@@ -487,7 +487,7 @@ function attack() {
 				removeLivingEntity(enemy);
 			}
 		}else if(facing=="right"){
-			var enemy=enemyAdjacent("right");
+			var enemy=enemyAdjacent(character, "right");
 			enemy.health-=10;
 			ctx.clearRect(enemy.position[0],enemy.position[1]+40,20,4);
 			drawHealthBar(enemy);
@@ -495,7 +495,7 @@ function attack() {
 				removeLivingEntity(enemy);
 			}
 		}else if(facing=="left"){
-			var enemy=enemyAdjacent("left");
+			var enemy=enemyAdjacent(character, "left");
 			enemy.health-=10;
 			ctx.clearRect(enemy.position[0],enemy.position[1]+40,20,4);
 			drawHealthBar(enemy);
@@ -503,7 +503,7 @@ function attack() {
 				removeLivingEntity(enemy);
 			}
 		}else if (facing=="down"){
-			var enemy=enemyAdjacent("down");
+			var enemy=enemyAdjacent(character, "down");
 			enemy.health-=10;
 			ctx.clearRect(enemy.position[0],enemy.position[1]+40,20,4);
 			drawHealthBar(enemy);
@@ -567,7 +567,7 @@ function pause(){
 			document.getElementById("here").innerHTML=q++; //also just to test timer
 			for(var i = 0; i < livingEntities.length; i++){
 				if(livingEntities[i]!=character){
-					if(livingEntities[i]==enemyAdjacent("right") || livingEntities[i]==enemyAdjacent("left") || livingEntities[i]==enemyAdjacent("up") || livingEntities[i]==enemyAdjacent("down")){
+					if(livingEntities[i]==enemyAdjacent(character, "right") || livingEntities[i]==enemyAdjacent(character, "left") || livingEntities[i]==enemyAdjacent(character, "up") || livingEntities[i]==enemyAdjacent(character, "down")){
 						enemyAttack();
 					}
 					else{
@@ -593,20 +593,41 @@ function enemyAttack(){
 //function that allows enemies to move toward the user to attack
 function enemyMove(enemy){
 	var direction;
-	if(character.position[0]-enemy.position[0]==0){
-		if(character.position[1]-enemy.position[1]<0){
+	var secondaryDirection;
+	if(character.position[0]-enemy.position[0]==0){//if x coordinate is equal
+		if(character.position[1]-enemy.position[1]<0){//if enemy is below
 			direction="up";
-		}else{
+		}else{//if enemy is above
 			direction="down";
 		}
-	}else if(character.position[1]-enemy.position[1]==0){
-		if(character.position[0]-enemy.position[0]<0){
+	}else if(character.position[1]-enemy.position[1]==0){//if y coorinate is equal
+		if(character.position[0]-enemy.position[0]<0){ //if enemy is to the right
 			direction="left";
-		}else{
+		}else{//if enemy is to the left
 			direction="right";
 		}
+	}else if(character.position[0]-enemy.position[0]<0){//if enemy is to the right
+		if(Math.round(Math.abs(character.position[0]-enemy.position[0])/Math.abs(character.position[1]-enemy.position[1]))<1){//if enemy is more right than above or below
+			direction="left";
+		}else{
+			if(character.position[1]-enemy.position[1]<0){//if enemy is more below
+				direction="up";
+			}else{//if enemy is more above
+				direction="down";
+			}
+		}
+	}else if(character.position[0]-enemy.position[0]>0){//if enemy is to the left
+		if(Math.round((character.position[0]-enemy.position[0])/Math.abs(character.position[1]-enemy.position[1]))<1){//if enemy is more left than above or below
+			direction="right";
+		}else{
+			if(character.position[1]-enemy.position[1]<0){//if enemy is more below
+				direction="up";
+			}else{//if enemy is more above
+				direction="down";
+			}
+		}
 	}
-	if(direction=="right" && clearPath(direction)){ //change clear path function to accept a 2nd parameter of entity, so that clear path checks per user/enemy
+	if(direction=="right" && clearPath(enemy, direction)){ //change clear path function to accept a 2nd parameter of entity, so that clear path checks per user/enemy
 		ctx.clearRect(enemy.position[0],enemy.position[1],20,44);
 		//ctx.clearRect(xPos-10,yPos-10,42,70);
 		//ctx.drawImage(person,xPos+stepPixels,yPos,20,40);
@@ -614,21 +635,21 @@ function enemyMove(enemy){
 		enemy.position[0]+=stepPixels;
 		drawHealthBar(enemy);
 	}
-	else if(direction=="left" && clearPath(direction)){
+	else if(direction=="left" && clearPath(enemy, direction)){
 		ctx.clearRect(enemy.position[0],enemy.position[1],20,44);
 		//ctx.clearRect(xPos-10,yPos-10,42,70);
 		drawEnemy(enemy.position[0]-10,enemy.position[1]);
 		enemy.position[0]-=stepPixels;
 		drawHealthBar(enemy);
 	}
-	else if(direction=="down" && clearPath(direction)){
+	else if(direction=="down" && clearPath(enemy, direction)){
 		ctx.clearRect(enemy.position[0],enemy.position[1],20,44);
 		//ctx.clearRect(xPos-10,yPos-10,42,70);
 		drawEnemy(enemy.position[0],enemy.position[1]+10);
 		enemy.position[1]+=stepPixels;
 		drawHealthBar(enemy);
 	}
-	else if(direction=="up" && clearPath(direction)){
+	else if(direction=="up" && clearPath(enemy, direction)){
 		ctx.clearRect(enemy.position[0],enemy.position[1],20,44);// exactly person sized
 		//ctx.clearRect(xPos-10,yPos-10,42,70); //bigger rectangle to erase attack
 		drawEnemy(enemy.position[0],enemy.position[1]-10);
