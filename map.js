@@ -504,7 +504,7 @@ function initializeInventory() {
 
 //function spawns enemies in the map
 function spawnEnemies(){
-	var numEnemies=5+(level/2);
+	var numEnemies=3;
 	for(var i = 1; i < numEnemies; i++){
 		//create enemies and give them stats
 		var enemy = new Object();
