@@ -510,7 +510,7 @@ function attack() {
 			if(enemy.health==0){
 				removeLivingEntity(enemy);
 			}
-		}	
+		}
 	}
 }
 
@@ -573,6 +573,9 @@ function pause(){
 					else{
 						enemyMove(livingEntities[i]);
 					}
+				}
+				if(character.health === 0){
+					window.location.href = "gameOver.html";
 				}
 			}
 		},250);
