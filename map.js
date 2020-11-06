@@ -3,6 +3,7 @@ var character = new Object();
 var address;
 var information;
 var informationArray;
+var paused = false; // for the enemies to move i use a timer that can be paused, and this variable is so i can also stop the users movements
 var level = 1; //the level(room) that the player is on currently
 var xPos = 10; //the X coordinate of the character
 var yPos = 330; //the Y coordinate of the character
@@ -30,6 +31,7 @@ function initializeGame() {
 	createMap();
 	spawnEnemies();
 	initializeInventory();
+	pause();
 }
 
 //function is unnecessar unless we create a map more complicated than one big room
@@ -442,4 +444,18 @@ function attack() {
 			removeLivingEntity(enemy);
 		}
 	}	
+}
+
+function pause(){
+	if(document.getElementById("timer").value=="Resume"){
+		document.getElementById("timer").value="Pause";
+		var q=100;//just to test the timer, can be removed anytime, or kept
+		timer=setInterval(function updateGame(){
+			document.getElementById("here").innerHTML=q--; //also just to test timer
+			
+		},1000);
+	}else{
+		document.getElementById("timer").value="Resume";
+		clearInterval(timer);
+	}
 }
