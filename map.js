@@ -8,8 +8,8 @@ var level = 1; //the level(room) that the player is on currently
 var startxPos = 670;
 var startyPos = 360;
 var spawnSide = "";
-var xPos = 10; //the X coordinate of the character
-var yPos = 330; //the Y coordinate of the character
+var xPos; //the X coordinate of the character
+var yPos; //the Y coordinate of the character
 character.position=[xPos,yPos];//for more continutity of entites
 var facing = "right"; //direction player last moved, used for directing
 var canvas = document.getElementById("myCanvas"); //the canvas that is the map
@@ -145,31 +145,34 @@ function move(direction){
 	
 	facing=direction;
 	// alert(clearPath("down"));
-	if(direction=="right" && clearPath(direction)){ //&& xPos!=1370
-		ctx.clearRect(xPos,yPos,20,40);
-		//ctx.clearRect(xPos-10,yPos-10,42,70);
-		ctx.drawImage(person,xPos+stepPixels,yPos,20,40);
-		xPos+=stepPixels;
+	if(!paused){
+		if(direction=="right" && clearPath(direction)){ //&& xPos!=1370
+			ctx.clearRect(xPos,yPos,20,40);
+			//ctx.clearRect(xPos-10,yPos-10,42,70);
+			ctx.drawImage(person,xPos+stepPixels,yPos,20,40);
+			xPos+=stepPixels;
+		}
+		else if(direction=="left" && clearPath(direction)){ //&& xPos!=stepPixels 
+			ctx.clearRect(xPos,yPos,20,40); 
+			//ctx.clearRect(xPos-10,yPos-10,42,70);
+			ctx.drawImage(person,xPos-stepPixels,yPos,20,40);
+			xPos-=stepPixels;
+		}
+		else if(direction=="down" && clearPath(direction)){ //&& yPos!=640
+			ctx.clearRect(xPos,yPos,20,40);
+			//ctx.clearRect(xPos-10,yPos-10,42,70);
+			ctx.drawImage(person,xPos,yPos+stepPixels,20,40);
+			yPos+=stepPixels;
+		}
+		else if(direction=="up" && clearPath(direction)){ //&& yPos!=stepPixels
+			ctx.clearRect(xPos,yPos,20,40); // exactly person sized
+			//ctx.clearRect(xPos-10,yPos-10,42,70); //bigger rectangle to erase attack
+			ctx.drawImage(person,xPos,yPos-stepPixels,20,40);
+			yPos-=stepPixels;
+		}
+		//drawHealthBar(enemyAdjacent("up"));
+		character.position=[xPos,yPos]
 	}
-	else if(direction=="left" && clearPath(direction)){ //&& xPos!=stepPixels 
-		ctx.clearRect(xPos,yPos,20,40); 
-		//ctx.clearRect(xPos-10,yPos-10,42,70);
-		ctx.drawImage(person,xPos-stepPixels,yPos,20,40);
-		xPos-=stepPixels;
-	}
-	else if(direction=="down" && clearPath(direction)){ //&& yPos!=640
-		ctx.clearRect(xPos,yPos,20,40);
-		//ctx.clearRect(xPos-10,yPos-10,42,70);
-		ctx.drawImage(person,xPos,yPos+stepPixels,20,40);
-		yPos+=stepPixels;
-	}
-	else if(direction=="up" && clearPath(direction)){ //&& yPos!=stepPixels
-		ctx.clearRect(xPos,yPos,20,40); // exactly person sized
-		//ctx.clearRect(xPos-10,yPos-10,42,70); //bigger rectangle to erase attack
-		ctx.drawImage(person,xPos,yPos-stepPixels,20,40);
-		yPos-=stepPixels;
-	}
-	character.position=[xPos,yPos]
 	if((xPos+yPos)%500===0) {
 		let randN = Math.floor(Math.random() * 3);
 		if (randN == 0) {
@@ -316,7 +319,7 @@ function checkIfRoomClear() {
 //function to remove an entity from the array
 function removeLivingEntity(entity){
 	var temp = [];
-	ctx.clearRect(entity.position[0],entity.position[1],20,40);
+	ctx.clearRect(entity.position[0],entity.position[1],20,44);
 	var x = livingEntities.length;
 	for(var i = 0;i < x; i++){
 		temp.push(livingEntities.shift());
@@ -328,19 +331,21 @@ function removeLivingEntity(entity){
 }
 
 function useRune() {
-	if (character.currentRune == "Algiz rune") { //This will damage everything in the room
-		for (let ind = 0; ind < livingEntities.length; ind++) {
-			livingEntities[ind].health -= 10;
+	if(!paused){
+		if (character.currentRune == "Algiz rune") { //This will damage everything in the room
+			for (let ind = 0; ind < livingEntities.length; ind++) {
+				livingEntities[ind].health -= 10;
+			}
 		}
+		else if (character.currentRune == "Mannaz rune") { //This will double the amount of gold the character is holding
+			character.gold *= 2;
+		}
+		else if (character.currentRune == "Dagaz rune") { //This will full heal the characters health and mana
+			character.health = character.maxHealth;
+			character.mana = character.maxMana;
+		}
+		character.currentRune = "";
 	}
-	else if (character.currentRune == "Mannaz rune") { //This will double the amount of gold the character is holding
-		character.gold *= 2;
-	}
-	else if (character.currentRune == "Dagaz rune") { //This will full heal the characters health and mana
-		character.health = character.maxHealth;
-		character.mana = character.maxMana;
-	}
-	character.currentRune = "";
 }
 
 function createCharacter(){
@@ -439,25 +444,20 @@ function addPoints() {
 
 //function spawns enemies in the map
 function spawnEnemies(){
-	var numEnemies=1+(level/2);
+	var numEnemies=5+(level/2);
 	for(var i = 1; i < numEnemies; i++){
 		//create enemies and give them stats
 		var enemy = new Object();
 		enemy.id=i;
 		enemy.position=getRandomPosition();
 		enemy.strength=level;
-		enemy.health=10;
+		enemy.health=100;
 		enemy.type="closeRange";
 		//add them to the array of living entites
 		addToLivingEntities(enemy);
 		//draw person with red rectangle to symbolize bad guy
 		drawEnemy(enemy.position[0],enemy.position[1]);
-		// ctx.drawImage(person,enemy.position[0],enemy.position[1],20,40);
-		// ctx.beginPath();
-		// ctx.lineWidth = "1";
-		// ctx.strokeStyle = "red";
-		// ctx.rect(enemy.position[0]+2, enemy.position[1]+2, 16, 36);
-		// ctx.stroke();
+		drawHealthBar(enemy);
 	}
 }
 
@@ -477,31 +477,41 @@ function getRandomPosition(){
 
 //function attacks an enemy standing directly next to player, will add functionality for archer later
 function attack() {
-	if(facing=="up"){
-		var enemy=enemyAdjacent("up");
-		enemy.health-=10;
-		if(enemy.health==0){
-			removeLivingEntity(enemy);
-		}
-	}else if(facing=="right"){
-		var enemy=enemyAdjacent("right");
-		enemy.health-=10;
-		if(enemy.health==0){
-			removeLivingEntity(enemy);
-		}
-	}else if(facing=="left"){
-		var enemy=enemyAdjacent("left");
-		enemy.health-=10;
-		if(enemy.health==0){
-			removeLivingEntity(enemy);
-		}
-	}else if (facing=="down"){
-		var enemy=enemyAdjacent("down");
-		enemy.health-=10;
-		if(enemy.health==0){
-			removeLivingEntity(enemy);
-		}
-	}	
+	if(!paused){
+		if(facing=="up"){
+			var enemy=enemyAdjacent("up");
+			enemy.health-=10;
+			ctx.clearRect(enemy.position[0],enemy.position[1]+40,20,4);
+			drawHealthBar(enemy);
+			if(enemy.health==0){
+				removeLivingEntity(enemy);
+			}
+		}else if(facing=="right"){
+			var enemy=enemyAdjacent("right");
+			enemy.health-=10;
+			ctx.clearRect(enemy.position[0],enemy.position[1]+40,20,4);
+			drawHealthBar(enemy);
+			if(enemy.health==0){
+				removeLivingEntity(enemy);
+			}
+		}else if(facing=="left"){
+			var enemy=enemyAdjacent("left");
+			enemy.health-=10;
+			ctx.clearRect(enemy.position[0],enemy.position[1]+40,20,4);
+			drawHealthBar(enemy);
+			if(enemy.health==0){
+				removeLivingEntity(enemy);
+			}
+		}else if (facing=="down"){
+			var enemy=enemyAdjacent("down");
+			enemy.health-=10;
+			ctx.clearRect(enemy.position[0],enemy.position[1]+40,20,4);
+			drawHealthBar(enemy);
+			if(enemy.health==0){
+				removeLivingEntity(enemy);
+			}
+		}	
+	}
 }
 
 function createDoors() {
@@ -547,12 +557,14 @@ function updateStartPos() {
 }
 
 //function that pauses and starts a timer that controls the enemies' moves
+var q=0;//just to test the timer, can be removed anytime, or kept
 function pause(){
 	if(document.getElementById("timer").value=="Resume"){
 		document.getElementById("timer").value="Pause";
-		var q=100;//just to test the timer, can be removed anytime, or kept
+		paused=false;
+		document.getElementById("overlay").style.display = "none";
 		timer=setInterval(function updateGame(){
-			document.getElementById("here").innerHTML=q--; //also just to test timer
+			document.getElementById("here").innerHTML=q++; //also just to test timer
 			for(var i = 0; i < livingEntities.length; i++){
 				if(livingEntities[i]!=character){
 					if(livingEntities[i]==enemyAdjacent("right") || livingEntities[i]==enemyAdjacent("left") || livingEntities[i]==enemyAdjacent("up") || livingEntities[i]==enemyAdjacent("down")){
@@ -563,16 +575,18 @@ function pause(){
 					}
 				}
 			}
-		},100);
+		},250);
 	}else{
 		document.getElementById("timer").value="Resume";
 		clearInterval(timer);
+		paused=true;
+		document.getElementById("overlay").style.display = "block";
 	}
 }
 
 //function that does damage to the player when an enemy hits them
 function enemyAttack(){
-	character.health -= 10;
+	character.health -= 5;
 	document.getElementById("healthBar").setAttribute("value",100*(character.health/character.maxHealth));
 }
 
@@ -593,29 +607,33 @@ function enemyMove(enemy){
 		}
 	}
 	if(direction=="right" && clearPath(direction)){ //change clear path function to accept a 2nd parameter of entity, so that clear path checks per user/enemy
-		ctx.clearRect(enemy.position[0],enemy.position[1],20,40);
+		ctx.clearRect(enemy.position[0],enemy.position[1],20,44);
 		//ctx.clearRect(xPos-10,yPos-10,42,70);
 		//ctx.drawImage(person,xPos+stepPixels,yPos,20,40);
 		drawEnemy(enemy.position[0]+10,enemy.position[1]);
 		enemy.position[0]+=stepPixels;
+		drawHealthBar(enemy);
 	}
 	else if(direction=="left" && clearPath(direction)){
-		ctx.clearRect(enemy.position[0],enemy.position[1],20,40);
+		ctx.clearRect(enemy.position[0],enemy.position[1],20,44);
 		//ctx.clearRect(xPos-10,yPos-10,42,70);
 		drawEnemy(enemy.position[0]-10,enemy.position[1]);
 		enemy.position[0]-=stepPixels;
+		drawHealthBar(enemy);
 	}
 	else if(direction=="down" && clearPath(direction)){
-		ctx.clearRect(enemy.position[0],enemy.position[1],20,40);
+		ctx.clearRect(enemy.position[0],enemy.position[1],20,44);
 		//ctx.clearRect(xPos-10,yPos-10,42,70);
 		drawEnemy(enemy.position[0],enemy.position[1]+10);
 		enemy.position[1]+=stepPixels;
+		drawHealthBar(enemy);
 	}
 	else if(direction=="up" && clearPath(direction)){
-		ctx.clearRect(enemy.position[0],enemy.position[1],20,40);// exactly person sized
+		ctx.clearRect(enemy.position[0],enemy.position[1],20,44);// exactly person sized
 		//ctx.clearRect(xPos-10,yPos-10,42,70); //bigger rectangle to erase attack
 		drawEnemy(enemy.position[0],enemy.position[1]-10);
 		enemy.position[1]-=stepPixels;
+		drawHealthBar(enemy);
 	}
 }
 
@@ -626,4 +644,12 @@ function drawEnemy(x,y){
 	ctx.strokeStyle = "red";
 	ctx.rect(x+2, y+2, 16, 36);
 	ctx.stroke();
+}
+
+function drawHealthBar(enemy){
+	var x = enemy.health/5
+	ctx.beginPath();
+	ctx.rect(enemy.position[0],enemy.position[1]+40,x,4);
+	ctx.fillStyle="red";
+	ctx.fill();
 }
