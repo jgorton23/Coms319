@@ -16,12 +16,15 @@ var canvas = document.getElementById("myCanvas"); //the canvas that is the map
 var ctx = canvas.getContext("2d"); //canvas editor
 var inventory = []; //the inventory array of the character
 var inventoryContainer = document.getElementById("inventoryContent");
+var points = 0;
+var pointsContainer = document.getElementById("pointsContent");
 var inventoryMap = [];
 const person = new Image(); // the image of the player
 person.src='./Stick_Person.png';
 const numAlgiz = 5;
 const numMannaz = 5;
 const numDagaz = 5;
+const numGoldCoins = 5;
 const heightPixels = 700;
 const widthPixels = 1400;
 const stepPixels = 10;
@@ -199,6 +202,11 @@ function move(direction){
 	let row = yPos/stepPixels;
 	let col = xPos/stepPixels;
 	console.log(yPos, row, xPos, col);
+	if (inventoryMap[row][col] === 104) {
+		inventoryMap[row][col] = 0;
+		addToInventory("Gold");
+		addPoints(100);
+	}
 	if(character.currentRune === "") {
 		if (inventoryMap[row][col] === 101) {
 			inventoryMap[row][col] = 0;
@@ -296,6 +304,12 @@ function drawInventoryMap() {
 				ctx.fillStyle="pink";
 				ctx.fill();
 			}
+			if (inventoryMap[row][col] === 104) {
+				ctx.beginPath();
+				ctx.rect(col*stepPixels,row*stepPixels,stepPixels,stepPixels);
+				ctx.fillStyle="yellow";
+				ctx.fill();
+			}
 		}
 	}
 }
@@ -303,6 +317,11 @@ function drawInventoryMap() {
 function addToInventory(item) {
 	inventory.push(item);
 	inventoryContainer.innerText=inventory.toString();
+}
+
+function addPoints(value) {
+	points += value;
+	pointsContainer.innerText=points;
 }
 
 //function to add an entity to the array
@@ -435,11 +454,13 @@ function initializeInventory() {
 		console.log(row, col, "103");
 		inventoryMap[row][col] = 103;
 	}
+	for (let i = 0; i < numGoldCoins; i++) {
+		let row = Math.floor(Math.random() * numOfRows);
+		let col = Math.floor(Math.random() * numOfColumns);
+		console.log(row, col, "104");
+		inventoryMap[row][col] = 104;
+	}
 	drawInventoryMap();
-}
-
-function addPoints() {
-
 }
 
 //function spawns enemies in the map
