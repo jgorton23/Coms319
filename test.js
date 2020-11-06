@@ -1,5 +1,5 @@
-const willDie = require('./HelperMethods');
-const updateStartPos = require('./map');
+const willDie = require('./HelperMethods').willDie;
+const updateStartPos = require('./HelperMethods').updateStartPos;
 
 var startxPos;
 var startyPos; 
@@ -11,5 +11,5 @@ test('checks to see if checkDeath function works', () => {
 
 test('checks to see if updateStartPos works', () => {
 	updateStartPos("top");
-	expect(startxPos.toBe(650));
+	expect(updateStartPos("top")).toBe("650,0");
 }); 
