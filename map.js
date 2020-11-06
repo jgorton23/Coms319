@@ -502,6 +502,7 @@ function attack() {
 	}	
 }
 
+<<<<<<< HEAD
 function createDoors() {
 	//top door
 	ctx.beginPath();
@@ -544,16 +545,35 @@ function updateStartPos() {
 	}
 }
 
+=======
+//function that pauses and starts a timer that controls the enemies' moves
+>>>>>>> 989a8c25b63e333372c259c06c34913e3ce94c96
 function pause(){
 	if(document.getElementById("timer").value=="Resume"){
 		document.getElementById("timer").value="Pause";
 		var q=100;//just to test the timer, can be removed anytime, or kept
 		timer=setInterval(function updateGame(){
 			document.getElementById("here").innerHTML=q--; //also just to test timer
-			
+			for(var i = 0; i < livingEntities.length; i++){
+				if(livingEntities[i]==enemyAdjacent("right") || livingEntities[i]==enemyAdjacent("left") || livingEntities[i]==enemyAdjacent("up") || livingEntities[i]==enemyAdjacent("down")){
+					enemyAttack();
+				}
+				else{
+					enemyMove();
+				}
+			}
 		},1000);
 	}else{
 		document.getElementById("timer").value="Resume";
 		clearInterval(timer);
 	}
+}
+
+function enemyAttack(){
+	character.health -= character.health/10;
+	document.getElementById("healthBar").setAttribute("value",100*(character.health/character.maxHealth));
+}
+
+function enemyMove(){
+
 }
