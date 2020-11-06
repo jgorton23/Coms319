@@ -211,24 +211,32 @@ function move(direction){
 		if (inventoryMap[row][col] === 101) {
 			inventoryMap[row][col] = 0;
 			character.currentRune = "Algiz rune";   //This will damage everything in the room
+			addPoints(200);
 		} else if (inventoryMap[row][col] === 102) {
 			inventoryMap[row][col] = 0;
 			character.currentRune = "Mannaz rune";  //This will double the amount of gold the character is holding
+			points *= 2;
+			addPoints(0);
 		} else if (inventoryMap[row][col] === 103) {
 			inventoryMap[row][col] = 0;
 			character.currentRune = "Dagaz rune";   //This will full heal the characters health and mana
+			addPoints(200);
 		}
 	} else {
 		if (inventoryMap[row][col] === 101 && window.confirm("Change Rune?")) {
 			inventoryMap[row][col] = 0;
 			character.currentRune = "Algiz rune";   //This will damage everything in the room
-			console.log(character.currentRune)
+			console.log(character.currentRune);
+			addPoints(200);
 		} else if (inventoryMap[row][col] === 102 && window.confirm("Change Rune?")) {
 			inventoryMap[row][col] = 0;
 			character.currentRune = "Mannaz rune";  //This will double the amount of gold the character is holding
+			points *= 2;
+			addPoints(0);
 		} else if (inventoryMap[row][col] === 103 && window.confirm("Change Rune?")) {
 			inventoryMap[row][col] = 0;
 			character.currentRune = "Dagaz rune";   //This will full heal the characters health and mana
+			addPoints(200);
 		}
 	}
 	drawInventoryMap();
