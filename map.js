@@ -1,5 +1,3 @@
-module.exports = updateStartPos;
-
 
 var livingEntities = [];
 var character = new Object();
@@ -739,3 +737,5 @@ function drawHealthBar(enemy){
 	ctx.fillStyle="red";
 	ctx.fill();
 }
+
+module.exports = updateStartPos;
