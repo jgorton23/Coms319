@@ -18,10 +18,11 @@
                 z-index: 2;
                 cursor: pointer;
             }
-            #stats{
-                background-color: lightgray;
-            }
+            /* #stats{
+                background-color: gray;
+            } */
             #stats a{
+                /* background-color: gray; */
                 float: left;
                 text-align: center;
                 padding: 14px 16px;
@@ -36,7 +37,7 @@
         </h1> -->
         <div id="stats">
             <!-- Here is the pause button  -->
-            <a style="float: left;">
+            <a>
                 <input id="timer" type="button" onclick="pause()" value="Resume" />
             </a>
             <!-- Here is the progress bar: health/mana bar  -->
@@ -49,23 +50,20 @@
                 <progress id="manaBar" max="100" value="100"> 100% </progress>
             </a>
             <!-- Here is the timer(pointless)  -->
-            <a>
+            <!-- <a>
                 <div id="here"></div>
-            </a>
+            </a> -->
             <!-- Here is where is shows the score  -->
-            <a>
+            <a style="font-size: 1.5em;">
                 Points:
-                <a id="pointsContent">0</a>
+                <a id="pointsContent" style="font-size: 1.5em;">0</a>
             </a>
             <!-- Here is where it shows the inventory  -->
-            <a>
-                Inventory:
-                <a id="goldContent">
-                    Empty
-                </a>
-                <a id="coalContent">
-                    Empty
-                </a>
+            <a id="goldContent" style="float: right;">
+                Empty
+            </a>
+            <a id="coalContent" style="float: right;">
+                Empty
             </a>
         </div>
 
