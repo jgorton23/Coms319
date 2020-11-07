@@ -25,6 +25,14 @@ const person = new Image(); // the image of the player
 person.src='./Stick_Person.png';
 const coin = new Image();
 coin.src='./coin.png';
+const redPotion= new Image();
+redPotion.src='./red_potion.png';
+const bluePotion= new Image();
+bluePotion.src='./blue_potion.png';
+const greenPotion = new Image();
+greenPotion.src='./green_potion.png';
+const coal = new Image();
+coal.src='./coal.png';
 const numAlgiz = 5;
 const numMannaz = 5;
 const numDagaz = 5;
@@ -53,7 +61,7 @@ function loadNewRoom() {
 	createMap();
 	spawnEnemies();
 	initializeInventory();
-	pause();
+	//pause();
 	checkIfRoomClear();
 }
 
@@ -309,22 +317,25 @@ function drawInventoryMap() {
 		inventoryMap.push([]);
 		for (let col = 0; col < numOfColumns; col++) {
 			if (inventoryMap[row][col] === 101) {
-				ctx.beginPath();
-				ctx.rect(col*stepPixels,row*stepPixels,stepPixels,stepPixels);
-				ctx.fillStyle="blue";
-				ctx.fill();
+				// ctx.beginPath();
+				// ctx.rect(col*stepPixels,row*stepPixels,stepPixels,stepPixels);
+				// ctx.fillStyle="blue";
+				// ctx.fill();
+				ctx.drawImage(bluePotion,col*stepPixels,row*stepPixels,15,20);
 			}
 			if (inventoryMap[row][col] === 102) {
-				ctx.beginPath();
-				ctx.rect(col*stepPixels,row*stepPixels,stepPixels,stepPixels);
-				ctx.fillStyle="pink";
-				ctx.fill();
+				// ctx.beginPath();
+				// ctx.rect(col*stepPixels,row*stepPixels,stepPixels,stepPixels);
+				// ctx.fillStyle="pink";
+				// ctx.fill();
+				ctx.drawImage(redPotion,col*stepPixels,row*stepPixels,15,20)
 			}
 			if (inventoryMap[row][col] === 103) {
-				ctx.beginPath();
-				ctx.rect(col*stepPixels,row*stepPixels,stepPixels,stepPixels);
-				ctx.fillStyle="green";
-				ctx.fill();
+				// ctx.beginPath();
+				// ctx.rect(col*stepPixels,row*stepPixels,stepPixels,stepPixels);
+				// ctx.fillStyle="green";
+				// ctx.fill();
+				ctx.drawImage(greenPotion,col*stepPixels,row*stepPixels,15,20);
 			}
 			if (inventoryMap[row][col] === 104) {
 				// ctx.beginPath();
@@ -334,10 +345,11 @@ function drawInventoryMap() {
 				ctx.drawImage(coin,col*stepPixels,row*stepPixels,15,20);
 			}
 			if (inventoryMap[row][col] === 105) {
-				ctx.beginPath();
-				ctx.rect(col*stepPixels,row*stepPixels,stepPixels,stepPixels);
-				ctx.fillStyle="gray";
-				ctx.fill();
+				// ctx.beginPath();
+				// ctx.rect(col*stepPixels,row*stepPixels,stepPixels,stepPixels);
+				// ctx.fillStyle="gray";
+				// ctx.fill();
+				ctx.drawImage(coal,col*stepPixels,row*stepPixels,30,40);
 			}
 		}
 	}
