@@ -59,20 +59,22 @@ function loadNewRoom() {
 //function is unnecessary unless we create a map more complicated than one big room
 //the only thing it does rn is spawn the character
 function createMap() {
-	ctx.drawImage(person,startxPos,startyPos,20,40);
+	// ctx.beginPath();
+	// ctx.rect(startxPos,startyPos,20,40);
+	// ctx.fillStyle="white";
+	// ctx.fill();
+	// ctx.drawImage(person,startxPos,startyPos,20,40);
+	drawPlayer(startxPos,startyPos);
 	xPos = startxPos;
 	yPos = startyPos;
-	//ctx.drawImage(image, 50, 330);
-	// for(var i=0; i<(widthPixels); i+=stepPixels){
-	// 	for(var j=0; j<heightPixels; j+=stepPixels){
-	// 		if(i==0 || j==0 || i==widthPixels-stepPixels || j==heightPixels-stepPixels){
-	// 			ctx.beginPath();
-	// 			ctx.rect(i,j,stepPixels,stepPixels);
-	// 			ctx.fillStyle="black";
-	// 			ctx.fill();
-	// 		}
-	// 	}
-	// }
+}
+
+function drawPlayer(x,y){
+	ctx.beginPath();
+	ctx.rect(x,y,20,40);
+	ctx.fillStyle="white";
+	ctx.fill();
+	ctx.drawImage(person,x,y,20,40);
 }
 
 //function that checks for arrow key presses
@@ -154,26 +156,26 @@ function move(direction){
 	if(!paused){
 		if(direction=="right" && clearPath(character, direction)){ //&& xPos!=1370
 			ctx.clearRect(xPos,yPos,20,40);
-			//ctx.clearRect(xPos-10,yPos-10,42,70);
-			ctx.drawImage(person,xPos+stepPixels,yPos,20,40);
+			//ctx.drawImage(person,xPos+stepPixels,yPos,20,40);
+			drawPlayer(xPos+stepPixels,yPos);
 			xPos+=stepPixels;
 		}
 		else if(direction=="left" && clearPath(character, direction)){ //&& xPos!=stepPixels 
 			ctx.clearRect(xPos,yPos,20,40); 
-			//ctx.clearRect(xPos-10,yPos-10,42,70);
-			ctx.drawImage(person,xPos-stepPixels,yPos,20,40);
+			//ctx.drawImage(person,xPos-stepPixels,yPos,20,40);
+			drawPlayer(xPos-stepPixels,yPos);
 			xPos-=stepPixels;
 		}
 		else if(direction=="down" && clearPath(character, direction)){ //&& yPos!=640
 			ctx.clearRect(xPos,yPos,20,40);
-			//ctx.clearRect(xPos-10,yPos-10,42,70);
-			ctx.drawImage(person,xPos,yPos+stepPixels,20,40);
+			//ctx.drawImage(person,xPos,yPos+stepPixels,20,40);
+			drawPlayer(xPos,yPos+stepPixels);
 			yPos+=stepPixels;
 		}
 		else if(direction=="up" && clearPath(character, direction)){ //&& yPos!=stepPixels
 			ctx.clearRect(xPos,yPos,20,40); // exactly person sized
-			//ctx.clearRect(xPos-10,yPos-10,42,70); //bigger rectangle to erase attack
-			ctx.drawImage(person,xPos,yPos-stepPixels,20,40);
+			//ctx.drawImage(person,xPos,yPos-stepPixels,20,40);
+			drawPlayer(xPos,yPos-stepPixels);
 			yPos-=stepPixels;
 		}
 		//drawHealthBar(enemyAdjacent("up"));
@@ -727,6 +729,10 @@ function enemyMove(enemy){
 }
 
 function drawEnemy(x,y){
+	ctx.beginPath();
+	ctx.rect(x,y,20,40);
+	ctx.fillStyle="white";
+	ctx.fill();
 	ctx.drawImage(person,x,y,20,40);
 	ctx.beginPath();
 	ctx.lineWidth = "1";
