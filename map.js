@@ -349,7 +349,7 @@ function drawInventoryMap() {
 				// ctx.rect(col*stepPixels,row*stepPixels,stepPixels,stepPixels);
 				// ctx.fillStyle="gray";
 				// ctx.fill();
-				ctx.drawImage(coal,col*stepPixels,row*stepPixels,30,40);
+				ctx.drawImage(coal,col*stepPixels,row*stepPixels,20,20);
 			}
 		}
 	}
