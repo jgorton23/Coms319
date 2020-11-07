@@ -18,6 +18,15 @@
                 z-index: 2;
                 cursor: pointer;
             }
+            #stats{
+                background-color: lightgray;
+            }
+            #stats a{
+                float: left;
+                text-align: center;
+                padding: 14px 16px;
+                font-size: 17px;
+            }
         </style>
     </head>
     <body style="text-align: center;" onload="initializeGame()">
@@ -25,34 +34,44 @@
         <!-- <h1>
             Map
         </h1> -->
-        <!-- Here is the progress bar: health/mana bar  -->
-        <div style="float: left;">
-            <input id="timer" type="button" onclick="pause()" value="Resume" />
-            <label for="healthBar">Health</label>
-            <progress id="healthBar" max="100" value="100"> 100% </progress>
-            <label for="manaBar">Mana</label>
-            <progress id="manaBar" max="100" value="100"> 100% </progress>
-            <div id="here" style="float: right;"></div>
-        </div>
-        
-        <div style="float: right">
-            Inventory
-            <div id="inventoryContent">
-                Empty
-            </div>
-        </div>
-        <div style="float: none">
-            Points
-            <div id="pointsContent">
-                0
-            </div>
+        <div id="stats">
+            <!-- Here is the pause button  -->
+            <a style="float: left;">
+                <input id="timer" type="button" onclick="pause()" value="Resume" />
+            </a>
+            <!-- Here is the progress bar: health/mana bar  -->
+            <a>
+                <label for="healthBar">Health</label>
+                <progress id="healthBar" max="100" value="100"> 100% </progress>
+            </a>
+            <a>
+                <label for="manaBar">Mana</label>
+                <progress id="manaBar" max="100" value="100"> 100% </progress>
+            </a>
+            <!-- Here is the timer(pointless)  -->
+            <a>
+                <div id="here"></div>
+            </a>
+            <!-- Here is where is shows the score  -->
+            <a>
+                Points:
+                <a id="pointsContent">0</a>
+            </a>
+            <!-- Here is where it shows the inventory  -->
+            <a>
+                Inventory:
+                <a id="inventoryContent">
+                    Empty
+                </a>
+            </a>
         </div>
 
+        <!-- a div element that adds an overlay when the game is paused-->
         <div id="overlay" onclick=pause()></div>
 
+        <!--the canvas on which the game is played-->
         <canvas id="myCanvas" width="1400" height="700" style="border:10px solid #000000;"></canvas>
-        <!-- <img id="person" src="Stick_Person.png" alt="person" width="22" height="44"> -->
-
+        
         <script src="map.js"></script>
 
     </body><!--- A new Comment --->
