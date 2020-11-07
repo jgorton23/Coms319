@@ -23,6 +23,8 @@ var pointsContainer = document.getElementById("pointsContent");
 var inventoryMap = [];
 const person = new Image(); // the image of the player
 person.src='./Stick_Person.png';
+const coin = new Image();
+coin.src='./coin.png';
 const numAlgiz = 5;
 const numMannaz = 5;
 const numDagaz = 5;
@@ -325,10 +327,11 @@ function drawInventoryMap() {
 				ctx.fill();
 			}
 			if (inventoryMap[row][col] === 104) {
-				ctx.beginPath();
-				ctx.rect(col*stepPixels,row*stepPixels,stepPixels,stepPixels);
-				ctx.fillStyle="yellow";
-				ctx.fill();
+				// ctx.beginPath();
+				// ctx.rect(col*stepPixels,row*stepPixels,stepPixels,stepPixels);
+				// ctx.fillStyle="yellow";
+				// ctx.fill();
+				ctx.drawImage(coin,col*stepPixels,row*stepPixels,15,20);
 			}
 			if (inventoryMap[row][col] === 105) {
 				ctx.beginPath();
