@@ -16,7 +16,8 @@ var facing = "right"; //direction player last moved, used for directing
 var canvas = document.getElementById("myCanvas"); //the canvas that is the map
 var ctx = canvas.getContext("2d"); //canvas editor
 var inventory = {}; //the inventory array of the character
-var inventoryContainer = document.getElementById("inventoryContent");
+var goldContainer = document.getElementById("goldContent");
+var coalContainer = document.getElementById("coalContent");
 var points = 0;
 var pointsContainer = document.getElementById("pointsContent");
 var inventoryMap = [];
@@ -346,7 +347,11 @@ function drawInventory() {
 	let string = "";
 	string += "Gold: " + inventory["Gold"] + "\n";
 	string += "Coal: " + inventory["Coal"];
-	inventoryContainer.innerText=string;
+	//inventoryContainer.innerText=string;
+	let gold = "Gold: " + inventory["Gold"];
+	let coal = "Coal: " + inventory["Coal"];
+	goldContainer.innerText=gold;
+	coalContainer.innerText=coal;
 }
 
 function addPoints(value) {
