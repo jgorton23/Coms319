@@ -110,6 +110,9 @@ function checkKey(e) {
 	}else if (e.keyCode == '32') {// space bar
 		attack();
 		checkIfRoomClear();
+	}else if(e.keyCode == '83'){ // s key
+		castSpell();
+		checkIfRoomClear();
 	}
 }
 
@@ -414,6 +417,8 @@ function useRune() {
 		else if (character.currentRune == "Dagaz rune") { //This will full heal the characters health and mana
 			character.health = character.maxHealth;
 			character.mana = character.maxMana;
+			document.getElementById("manaBar").setAttribute("value", 100)
+			document.getElementById("healthBar").setAttribute("value", 100)
 		}
 		character.currentRune = "";
 	}
@@ -555,6 +560,56 @@ function getRandomPosition(){
 		}
 	}
 	return [x*10,y*10];
+}
+//funtion casts a spell on the enemy standing next to the player
+function castSpell(){
+	if(!paused && character.mana >= 10){
+		if(facing == "up"){
+			var enemy=enemyAdjacent(character, "up");
+			enemy.health-=20;
+			character.mana -= 5;
+			document.getElementById("manaBar").setAttribute("value", 100*(character.mana/character.maxMana))
+			ctx.clearRect(enemy.position[0],enemy.position[1]+40,20,4);
+			drawHealthBar(enemy);
+			if(enemy.health==0){
+				removeLivingEntity(enemy);
+			}
+		}
+		else if(facing == "right"){
+			var enemy=enemyAdjacent(character, "right");
+			enemy.health-=20;
+			character.mana -= 5;
+			document.getElementById("manaBar").setAttribute("value", 100*(character.mana/character.maxMana))
+			ctx.clearRect(enemy.position[0],enemy.position[1]+40,20,4);
+			drawHealthBar(enemy);
+			if(enemy.health==0){
+				removeLivingEntity(enemy);
+			}
+		}
+		else if(facing == "left"){
+			var enemy=enemyAdjacent(character, "left");
+			enemy.health-=20;
+			character.mana -= 5;
+			document.getElementById("manaBar").setAttribute("value", 100*(character.mana/character.maxMana))
+			ctx.clearRect(enemy.position[0],enemy.position[1]+40,20,4);
+			drawHealthBar(enemy);
+			if(enemy.health==0){
+				removeLivingEntity(enemy);
+			}
+		}
+		else if(facing == "down"){
+			var enemy=enemyAdjacent(character, "down");
+			enemy.health-=20;
+			character.mana -= 5;
+			document.getElementById("manaBar").setAttribute("value", 100*(character.mana/character.maxMana))
+			ctx.clearRect(enemy.position[0],enemy.position[1]+40,20,4);
+			drawHealthBar(enemy);
+			if(enemy.health==0){
+				removeLivingEntity(enemy);
+			}
+		}
+
+	}
 }
 
 //function attacks an enemy standing directly next to player, will add functionality for archer later
