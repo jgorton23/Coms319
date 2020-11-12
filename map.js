@@ -6,6 +6,7 @@ var information;
 var informationArray;
 var paused = false; // for the enemies to move i use a timer that can be paused, and this variable is so i can also stop the users movements
 var level = 1; //the level(room) that the player is on currently
+var levelContainer = document.getElementById("levelContent");
 var startxPos = 670;
 var startyPos = 360;
 var spawnSide = "";
@@ -56,6 +57,8 @@ function initializeGame() {
 
 
 function loadNewRoom() {
+	level++;
+	drawLevel();
 	inventoryMap = [];
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	createMap();
@@ -376,6 +379,10 @@ function drawInventory() {
 	let coal = "Coal: " + inventory["Coal"];
 	goldContainer.innerText=gold;
 	coalContainer.innerText=coal;
+}
+
+function drawLevel() {
+	levelContainer.innerText=level;
 }
 
 function addPoints(value) {
