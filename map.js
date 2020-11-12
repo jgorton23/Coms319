@@ -217,8 +217,13 @@ function move(direction){
 			character.manaPotions++;
 		}
 	}
-	let row = yPos/stepPixels;
-	let col = xPos/stepPixels;
+	collectObjects();
+	drawInventoryMap();
+}
+
+function collectObjects() {
+	let row = yPos / stepPixels;
+	let col = xPos / stepPixels;
 	console.log(yPos, row, xPos, col);
 	if (inventoryMap[row][col] === 104) {
 		inventoryMap[row][col] = 0;
@@ -230,7 +235,7 @@ function move(direction){
 		addToInventory("Coal");
 		addPoints(50);
 	}
-	if(character.currentRune === "") {
+	if (character.currentRune === "") {
 		if (inventoryMap[row][col] === 101) {
 			inventoryMap[row][col] = 0;
 			character.currentRune = "Algiz rune";   //This will damage everything in the room
@@ -264,7 +269,6 @@ function move(direction){
 			addPoints(200);
 		}
 	}
-	drawInventoryMap();
 }
 
 //a function that verifies a players ability to move
