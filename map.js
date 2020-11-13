@@ -5,6 +5,7 @@ var information;
 var informationArray;
 var paused = false; // for the enemies to move i use a timer that can be paused, and this variable is so i can also stop the users movements
 var level = 1; //the level(room) that the player is on currently
+var levelContainer = document.getElementById("levelContent");
 var startxPos = 670;
 var startyPos = 360;
 var spawnSide = "";
@@ -55,6 +56,8 @@ function initializeGame() {
 
 
 function loadNewRoom() {
+	level++;
+	drawLevel();
 	inventoryMap = [];
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	createMap();
@@ -108,6 +111,9 @@ function checkKey(e) {
 		usePotion("mana");
 	}else if (e.keyCode == '32') {// space bar
 		attack();
+		checkIfRoomClear();
+	}else if(e.keyCode == '83'){ // s key
+		castSpell();
 		checkIfRoomClear();
 	}
 }
@@ -213,8 +219,13 @@ function move(direction){
 			character.manaPotions++;
 		}
 	}
-	let row = yPos/stepPixels;
-	let col = xPos/stepPixels;
+	collectObjects();
+	drawInventoryMap();
+}
+
+function collectObjects() {
+	let row = yPos / stepPixels;
+	let col = xPos / stepPixels;
 	console.log(yPos, row, xPos, col);
 	if (inventoryMap[row][col] === 104) {
 		inventoryMap[row][col] = 0;
@@ -226,7 +237,7 @@ function move(direction){
 		addToInventory("Coal");
 		addPoints(50);
 	}
-	if(character.currentRune === "") {
+	if (character.currentRune === "") {
 		if (inventoryMap[row][col] === 101) {
 			inventoryMap[row][col] = 0;
 			character.currentRune = "Algiz rune";   //This will damage everything in the room
@@ -260,7 +271,6 @@ function move(direction){
 			addPoints(200);
 		}
 	}
-	drawInventoryMap();
 }
 
 //a function that verifies a players ability to move
@@ -348,7 +358,7 @@ function drawInventoryMap() {
 				// ctx.rect(col*stepPixels,row*stepPixels,stepPixels,stepPixels);
 				// ctx.fillStyle="gray";
 				// ctx.fill();
-				ctx.drawImage(coal,col*stepPixels,row*stepPixels,30,40);
+				ctx.drawImage(coal,col*stepPixels,row*stepPixels,20,20);
 			}
 		}
 	}
@@ -368,6 +378,10 @@ function drawInventory() {
 	let coal = "Coal: " + inventory["Coal"];
 	goldContainer.innerText=gold;
 	coalContainer.innerText=coal;
+}
+
+function drawLevel() {
+	levelContainer.innerText=level;
 }
 
 function addPoints(value) {
@@ -413,6 +427,8 @@ function useRune() {
 		else if (character.currentRune == "Dagaz rune") { //This will full heal the characters health and mana
 			character.health = character.maxHealth;
 			character.mana = character.maxMana;
+			document.getElementById("manaBar").setAttribute("value", 100)
+			document.getElementById("healthBar").setAttribute("value", 100)
 		}
 		character.currentRune = "";
 	}
@@ -554,6 +570,56 @@ function getRandomPosition(){
 		}
 	}
 	return [x*10,y*10];
+}
+//funtion casts a spell on the enemy standing next to the player
+function castSpell(){
+	if(!paused && character.mana >= 10){
+		if(facing == "up"){
+			var enemy=enemyAdjacent(character, "up");
+			enemy.health-=20;
+			character.mana -= 5;
+			document.getElementById("manaBar").setAttribute("value", 100*(character.mana/character.maxMana))
+			ctx.clearRect(enemy.position[0],enemy.position[1]+40,20,4);
+			drawHealthBar(enemy);
+			if(enemy.health==0){
+				removeLivingEntity(enemy);
+			}
+		}
+		else if(facing == "right"){
+			var enemy=enemyAdjacent(character, "right");
+			enemy.health-=20;
+			character.mana -= 5;
+			document.getElementById("manaBar").setAttribute("value", 100*(character.mana/character.maxMana))
+			ctx.clearRect(enemy.position[0],enemy.position[1]+40,20,4);
+			drawHealthBar(enemy);
+			if(enemy.health==0){
+				removeLivingEntity(enemy);
+			}
+		}
+		else if(facing == "left"){
+			var enemy=enemyAdjacent(character, "left");
+			enemy.health-=20;
+			character.mana -= 5;
+			document.getElementById("manaBar").setAttribute("value", 100*(character.mana/character.maxMana))
+			ctx.clearRect(enemy.position[0],enemy.position[1]+40,20,4);
+			drawHealthBar(enemy);
+			if(enemy.health==0){
+				removeLivingEntity(enemy);
+			}
+		}
+		else if(facing == "down"){
+			var enemy=enemyAdjacent(character, "down");
+			enemy.health-=20;
+			character.mana -= 5;
+			document.getElementById("manaBar").setAttribute("value", 100*(character.mana/character.maxMana))
+			ctx.clearRect(enemy.position[0],enemy.position[1]+40,20,4);
+			drawHealthBar(enemy);
+			if(enemy.health==0){
+				removeLivingEntity(enemy);
+			}
+		}
+
+	}
 }
 
 //function attacks an enemy standing directly next to player, will add functionality for archer later
