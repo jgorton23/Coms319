@@ -1,4 +1,3 @@
-
 var livingEntities = [];
 var character = new Object();
 var address;
