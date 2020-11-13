@@ -4,6 +4,8 @@ var address;
 var information;
 var informationArray;
 var paused = false; // for the enemies to move i use a timer that can be paused, and this variable is so i can also stop the users movements
+var floor = 1;
+var stairsActive = false;
 var level = 1; //the level(room) that the player is on currently
 var levelContainer = document.getElementById("levelContent");
 var startxPos = 670;
@@ -164,6 +166,27 @@ function move(direction){
 			spawnSide = "bottom";
 		}
 		updateStartPos(spawnSide);
+	}
+	
+	if (stairsActive) {
+		//left
+		//1280
+		//0 - 90
+		if ((yPos >= 0  && yPos <= 90) && xPos == 1280) {
+			loadNewRoom();
+			spawnSide = "top";
+			floor++;
+			stairsActive = false;
+		}
+		//bottom
+		//1290 - 1380
+		//100
+		else if ((xPos >= 1290  && xPos <= 1380) && yPos == 100) {
+			loadNewRoom();
+			spawnSide = "left";
+			floor++;
+			stairsActive = false;
+		}
 	}
 	
 	facing=direction;
@@ -396,7 +419,12 @@ function addToLivingEntities(entity) {
 
 function checkIfRoomClear() {
 	if (livingEntities.length == 1) {
-		createDoors();
+		if (level == 2*floor ) {
+			createStairs();
+		}
+		else {
+			createDoors();
+		}
 	}
 }
 
@@ -661,6 +689,15 @@ function attack() {
 	}
 }
 
+function createStairs() {
+	//top door
+	stairsActive = true;
+	ctx.beginPath();
+	ctx.rect(1300,0,100,100);
+	ctx.fillStyle="gray";
+	ctx.fill();
+}
+
 function createDoors() {
 	//top door
 	ctx.beginPath();
@@ -738,6 +775,11 @@ function pause(){
 function enemyAttack(){
 	character.health -= 5;
 	document.getElementById("healthBar").setAttribute("value",100*(character.health/character.maxHealth));
+}
+
+function goToNextFloor(){
+	floor++;
+	loadNewRoom();
 }
 
 //function that allows enemies to move toward the user to attack
