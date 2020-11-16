@@ -605,12 +605,10 @@ function getRandomPosition(){
 //funtion casts a spell on the enemy standing next to the player
 function castSpell(){
 	if(!paused && character.mana >= 10){
-		// ctx.beginPath();
 		if(facing == "up"){
 			var enemy=enemyAdjacent(character, "up");
 			enemy.health = attackSpell(curSpell, enemy);
 			document.getElementById("manaBar").setAttribute("value", 100*(character.mana/character.maxMana))
-			// ctx.clearRect(enemy.position[0],enemy.position[1],1,1)
 			ctx.clearRect(enemy.position[0],enemy.position[1]+40,20,4);
 			drawHealthBar(enemy);
 			if(enemy.health<=0){
@@ -621,7 +619,6 @@ function castSpell(){
 			var enemy=enemyAdjacent(character, "right");
 			enemy.health = attackSpell(curSpell, enemy);
 			document.getElementById("manaBar").setAttribute("value", 100*(character.mana/character.maxMana))
-			// ctx.clearRect(enemy.position[0],enemy.position[1],1,1)
 			ctx.clearRect(enemy.position[0],enemy.position[1]+40,20,4);
 			drawHealthBar(enemy);
 			if(enemy.health<=0){
@@ -632,7 +629,6 @@ function castSpell(){
 			var enemy=enemyAdjacent(character, "left");
 			enemy.health = attackSpell(curSpell, enemy);
 			document.getElementById("manaBar").setAttribute("value", 100*(character.mana/character.maxMana))
-			// ctx.clearRect(enemy.position[0],enemy.position[1],1,1)
 			ctx.clearRect(enemy.position[0],enemy.position[1]+40,20,4);
 			drawHealthBar(enemy);
 			if(enemy.health<=0){
@@ -643,7 +639,6 @@ function castSpell(){
 			var enemy=enemyAdjacent(character, "down");
 			enemy.health = attackSpell(curSpell, enemy);
 			document.getElementById("manaBar").setAttribute("value", 100*(character.mana/character.maxMana))
-			// ctx.clearRect(enemy.position[0],enemy.position[1],1,1)
 			ctx.clearRect(enemy.position[0],enemy.position[1]+40,20,4);
 			drawHealthBar(enemy);
 			if(enemy.health<=0){
@@ -658,23 +653,14 @@ function attackSpell(num, curEnemy){
 	if(num === "1" && character.mana >= 5){
 		curEnemy.health-=20;
 		character.mana -= 5;
-		// ctx.rect(enemy.position[0],enemy.position[1],1,1);
-		// ctx.fillStyle="red";
-		// ctx.fill();
 		return curEnemy.health;
 	} else if (num === "2" && character.mana >= 3){
 		curEnemy.health -=15;
 		character.mana -=3;
-		// ctx.rect(enemy.position[0],enemy.position[1],1,1);
-		// ctx.fillStyle="blue";
-		// ctx.fill();
 		return curEnemy.health;
 	} else if (num === "3" && character.mana >= 10){
 		curEnemy.health -=25;
 		character.mana -=10;
-		// ctx.rect(enemy.position[0],enemy.position[1],1,1);
-		// ctx.fillStyle="brown";
-		// ctx.fill();
 		return curEnemy.health;
 	}
 	return curEnemy.health;
