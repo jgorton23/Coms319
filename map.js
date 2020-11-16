@@ -45,6 +45,7 @@ const widthPixels = 1400;
 const stepPixels = 10;
 const numOfRows = heightPixels/stepPixels;
 const numOfColumns = widthPixels/stepPixels;
+var curSpell;
 
 function initializeGame() {
 	addToLivingEntities(character);
@@ -53,6 +54,7 @@ function initializeGame() {
 	spawnEnemies();
 	initializeInventory();
 	pause();
+	chooseSpell();
 	checkIfRoomClear();
 }
 
@@ -65,6 +67,7 @@ function loadNewRoom() {
 	createMap();
 	spawnEnemies();
 	initializeInventory();
+	chooseSpell();
 	//pause();
 	checkIfRoomClear();
 }
@@ -602,51 +605,103 @@ function getRandomPosition(){
 //funtion casts a spell on the enemy standing next to the player
 function castSpell(){
 	if(!paused && character.mana >= 10){
+		// ctx.beginPath();
 		if(facing == "up"){
 			var enemy=enemyAdjacent(character, "up");
-			enemy.health-=20;
-			character.mana -= 5;
+			enemy.health = attackSpell(curSpell, enemy);
 			document.getElementById("manaBar").setAttribute("value", 100*(character.mana/character.maxMana))
+			// ctx.clearRect(enemy.position[0],enemy.position[1],1,1)
 			ctx.clearRect(enemy.position[0],enemy.position[1]+40,20,4);
 			drawHealthBar(enemy);
-			if(enemy.health==0){
+			if(enemy.health<=0){
 				removeLivingEntity(enemy);
 			}
 		}
 		else if(facing == "right"){
 			var enemy=enemyAdjacent(character, "right");
-			enemy.health-=20;
-			character.mana -= 5;
+			enemy.health = attackSpell(curSpell, enemy);
 			document.getElementById("manaBar").setAttribute("value", 100*(character.mana/character.maxMana))
+			// ctx.clearRect(enemy.position[0],enemy.position[1],1,1)
 			ctx.clearRect(enemy.position[0],enemy.position[1]+40,20,4);
 			drawHealthBar(enemy);
-			if(enemy.health==0){
+			if(enemy.health<=0){
 				removeLivingEntity(enemy);
 			}
 		}
 		else if(facing == "left"){
 			var enemy=enemyAdjacent(character, "left");
-			enemy.health-=20;
-			character.mana -= 5;
+			enemy.health = attackSpell(curSpell, enemy);
 			document.getElementById("manaBar").setAttribute("value", 100*(character.mana/character.maxMana))
+			// ctx.clearRect(enemy.position[0],enemy.position[1],1,1)
 			ctx.clearRect(enemy.position[0],enemy.position[1]+40,20,4);
 			drawHealthBar(enemy);
-			if(enemy.health==0){
+			if(enemy.health<=0){
 				removeLivingEntity(enemy);
 			}
 		}
 		else if(facing == "down"){
 			var enemy=enemyAdjacent(character, "down");
-			enemy.health-=20;
-			character.mana -= 5;
+			enemy.health = attackSpell(curSpell, enemy);
 			document.getElementById("manaBar").setAttribute("value", 100*(character.mana/character.maxMana))
+			// ctx.clearRect(enemy.position[0],enemy.position[1],1,1)
 			ctx.clearRect(enemy.position[0],enemy.position[1]+40,20,4);
 			drawHealthBar(enemy);
-			if(enemy.health==0){
+			if(enemy.health<=0){
 				removeLivingEntity(enemy);
 			}
 		}
 
+	}
+}
+
+function attackSpell(num, curEnemy){
+	if(num === "1" && character.mana >= 5){
+		curEnemy.health-=20;
+		character.mana -= 5;
+		// ctx.rect(enemy.position[0],enemy.position[1],1,1);
+		// ctx.fillStyle="red";
+		// ctx.fill();
+		return curEnemy.health;
+	} else if (num === "2" && character.mana >= 3){
+		curEnemy.health -=15;
+		character.mana -=3;
+		// ctx.rect(enemy.position[0],enemy.position[1],1,1);
+		// ctx.fillStyle="blue";
+		// ctx.fill();
+		return curEnemy.health;
+	} else if (num === "3" && character.mana >= 10){
+		curEnemy.health -=25;
+		character.mana -=10;
+		// ctx.rect(enemy.position[0],enemy.position[1],1,1);
+		// ctx.fillStyle="brown";
+		// ctx.fill();
+		return curEnemy.health;
+	}
+	return curEnemy.health;
+}
+
+function chooseSpell(){
+	if(level === 1) {
+		curSpell = "1";
+	} else if (level === 2 && window.confirm("Change Spell?")){
+		curSpell = window.prompt("1. Fireball Attack\n" +
+			"2. Ice Attack\n" + "Choose Spell: ");
+
+	} else if(level >= 3 && window.confirm("Change Spell?")){
+		curSpell = window.prompt("1. Fireball Attack\n" +
+			"2. Ice Attack\n" +
+			"3. Ground Attack\n" + "Choose Spell: ");
+	}
+
+	if(curSpell === "1" || curSpell === "Fireball Attack"){
+		curSpell = "1";
+		alert("Your Current Spell is Fireball Attack");
+	} else if (curSpell === "2" || curSpell === "Ice Attack"){
+		curSpell = "2";
+		alert("Your Current Spell is Ice Attack");
+	} else if (curSpell === "3" || curSpell === "Ground Attack"){
+		curSpell = "3";
+		alert("Your Current Spell is Ground Attack");
 	}
 }
 
@@ -658,7 +713,7 @@ function attack() {
 			enemy.health-=10;
 			ctx.clearRect(enemy.position[0],enemy.position[1]+40,20,4);
 			drawHealthBar(enemy);
-			if(enemy.health==0){
+			if(enemy.health<=0){
 				removeLivingEntity(enemy);
 			}
 		}else if(facing=="right"){
@@ -666,7 +721,7 @@ function attack() {
 			enemy.health-=10;
 			ctx.clearRect(enemy.position[0],enemy.position[1]+40,20,4);
 			drawHealthBar(enemy);
-			if(enemy.health==0){
+			if(enemy.health<=0){
 				removeLivingEntity(enemy);
 			}
 		}else if(facing=="left"){
@@ -674,7 +729,7 @@ function attack() {
 			enemy.health-=10;
 			ctx.clearRect(enemy.position[0],enemy.position[1]+40,20,4);
 			drawHealthBar(enemy);
-			if(enemy.health==0){
+			if(enemy.health<=0){
 				removeLivingEntity(enemy);
 			}
 		}else if (facing=="down"){
@@ -682,7 +737,7 @@ function attack() {
 			enemy.health-=10;
 			ctx.clearRect(enemy.position[0],enemy.position[1]+40,20,4);
 			drawHealthBar(enemy);
-			if(enemy.health==0){
+			if(enemy.health<=0){
 				removeLivingEntity(enemy);
 			}
 		}
