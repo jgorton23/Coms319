@@ -16,6 +16,7 @@ var yPos; //the Y coordinate of the character
 character.position=[xPos,yPos];//for more continutity of entites
 character.width = 20;
 character.height=40;
+var shielding = false;
 var facing = "right"; //direction player last moved, used for directing
 var canvas = document.getElementById("myCanvas"); //the canvas that is the map
 var ctx = canvas.getContext("2d"); //canvas editor
@@ -123,6 +124,8 @@ function checkKey(e) {
 	}else if(e.keyCode == '83'){ // s key
 		castSpell();
 		checkIfRoomClear();
+	}else if(e.keyCode == '68'){ // D key
+		shielding = true;
 	}
 }
 
@@ -197,7 +200,7 @@ function move(direction){
 	
 	facing=direction;
 	// alert(clearPath("down"));
-	if(!paused){
+	if(!paused && !shielding){
 		if(direction=="right" && clearPath(character, direction)){ //&& xPos!=1370
 			ctx.clearRect(xPos,yPos,character.width,character.height);
 			drawPlayer(xPos+stepPixels,yPos);
@@ -395,10 +398,6 @@ function addToInventory(item) {
 }
 
 function drawInventory() {
-	let string = "";
-	string += "Gold: " + inventory["Gold"] + "\n";
-	string += "Coal: " + inventory["Coal"];
-	//inventoryContainer.innerText=string;
 	let gold = "Gold: " + inventory["Gold"];
 	let coal = "Coal: " + inventory["Coal"];
 	goldContainer.innerText=gold;
@@ -817,21 +816,24 @@ function pause(){
 		paused=false;
 		document.getElementById("overlay").style.display = "none";
 		timer=setInterval(function updateGame(){
-			document.getElementById("here").innerHTML=q++; //also just to test timer
-			for(var i = 0; i < livingEntities.length; i++){
-				if(livingEntities[i]!=character){
-					if(livingEntities[i]==enemyAdjacent(character, "right") || livingEntities[i]==enemyAdjacent(character, "left") || livingEntities[i]==enemyAdjacent(character, "up") || livingEntities[i]==enemyAdjacent(character, "down")){
-						enemyAttack();
+			q++
+			document.getElementById("here").innerHTML=Math.floor(q/10); //also just to test timer
+			if(q%10==0){
+				for(var i = 0; i < livingEntities.length; i++){
+					if(livingEntities[i]!=character){
+						if(livingEntities[i]==enemyAdjacent(character, "right") || livingEntities[i]==enemyAdjacent(character, "left") || livingEntities[i]==enemyAdjacent(character, "up") || livingEntities[i]==enemyAdjacent(character, "down")){
+							enemyAttack();
+						}
+						else{
+							enemyMove(livingEntities[i]);
+						}
 					}
-					else{
-						enemyMove(livingEntities[i]);
-					}
-				}
-				if(character.health === 0){
-					window.location.href = "gameOver.html";
 				}
 			}
-		},250);
+			if(character.health === 0){
+				window.location.href = "gameOver.html";
+			}
+		},25);
 	}else{
 		document.getElementById("timer").value="Resume";
 		clearInterval(timer);
