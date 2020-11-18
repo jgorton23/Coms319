@@ -52,6 +52,12 @@ function initializeGame() {
 	initializeInventory();
 	pause();
 	checkIfRoomClear();
+	inventory["Gold"] = 0;
+	inventory["Coal"] = 0;
+	let gold = "Gold: " + inventory["Gold"];
+	let coal = "Coal: " + inventory["Coal"];
+	goldContainer.innerText=gold;
+	coalContainer.innerText=coal;
 }
 
 
@@ -518,8 +524,6 @@ function initializeInventory() {
 		console.log(row, col, "105");
 		inventoryMap[row][col] = 105;
 	}
-	inventory["Gold"] = 0;
-	inventory["Coal"] = 0;
 	drawInventoryMap();
 	drawInventory();
 }
