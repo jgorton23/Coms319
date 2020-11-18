@@ -1,11 +1,13 @@
-
 var livingEntities = [];
 var character = new Object();
 var address;
 var information;
 var informationArray;
 var paused = false; // for the enemies to move i use a timer that can be paused, and this variable is so i can also stop the users movements
+var floor = 1;
+var stairsActive = false;
 var level = 1; //the level(room) that the player is on currently
+var levelContainer = document.getElementById("levelContent");
 var startxPos = 670;
 var startyPos = 360;
 var spawnSide = "";
@@ -43,6 +45,7 @@ const widthPixels = 1400;
 const stepPixels = 10;
 const numOfRows = heightPixels/stepPixels;
 const numOfColumns = widthPixels/stepPixels;
+var curSpell;
 
 function initializeGame() {
 	addToLivingEntities(character);
@@ -51,6 +54,7 @@ function initializeGame() {
 	spawnEnemies();
 	initializeInventory();
 	pause();
+	chooseSpell();
 	checkIfRoomClear();
 	inventory["Gold"] = 0;
 	inventory["Coal"] = 0;
@@ -62,11 +66,14 @@ function initializeGame() {
 
 
 function loadNewRoom() {
+	level++;
+	drawLevel();
 	inventoryMap = [];
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	createMap();
 	spawnEnemies();
 	initializeInventory();
+	chooseSpell();
 	//pause();
 	checkIfRoomClear();
 }
@@ -115,6 +122,9 @@ function checkKey(e) {
 		usePotion("mana");
 	}else if (e.keyCode == '32') {// space bar
 		attack();
+		checkIfRoomClear();
+	}else if(e.keyCode == '83'){ // s key
+		castSpell();
 		checkIfRoomClear();
 	}
 }
@@ -165,6 +175,27 @@ function move(direction){
 			spawnSide = "bottom";
 		}
 		updateStartPos(spawnSide);
+	}
+	
+	if (stairsActive) {
+		//left
+		//1280
+		//0 - 90
+		if ((yPos >= 0  && yPos <= 90) && xPos == 1280) {
+			loadNewRoom();
+			spawnSide = "top";
+			floor++;
+			stairsActive = false;
+		}
+		//bottom
+		//1290 - 1380
+		//100
+		else if ((xPos >= 1290  && xPos <= 1380) && yPos == 100) {
+			loadNewRoom();
+			spawnSide = "left";
+			floor++;
+			stairsActive = false;
+		}
 	}
 	
 	facing=direction;
@@ -220,8 +251,13 @@ function move(direction){
 			character.manaPotions++;
 		}
 	}
-	let row = yPos/stepPixels;
-	let col = xPos/stepPixels;
+	collectObjects();
+	drawInventoryMap();
+}
+
+function collectObjects() {
+	let row = yPos / stepPixels;
+	let col = xPos / stepPixels;
 	console.log(yPos, row, xPos, col);
 	if (inventoryMap[row][col] === 104) {
 		inventoryMap[row][col] = 0;
@@ -233,7 +269,7 @@ function move(direction){
 		addToInventory("Coal");
 		addPoints(50);
 	}
-	if(character.currentRune === "") {
+	if (character.currentRune === "") {
 		if (inventoryMap[row][col] === 101) {
 			inventoryMap[row][col] = 0;
 			character.currentRune = "Algiz rune";   //This will damage everything in the room
@@ -267,7 +303,6 @@ function move(direction){
 			addPoints(200);
 		}
 	}
-	drawInventoryMap();
 }
 
 //a function that verifies a players ability to move
@@ -377,6 +412,10 @@ function drawInventory() {
 	coalContainer.innerText=coal;
 }
 
+function drawLevel() {
+	levelContainer.innerText=level;
+}
+
 function addPoints(value) {
 	points += value;
 	pointsContainer.innerText=points;
@@ -389,7 +428,12 @@ function addToLivingEntities(entity) {
 
 function checkIfRoomClear() {
 	if (livingEntities.length == 1) {
-		createDoors();
+		if (level == 2*floor ) {
+			createStairs();
+		}
+		else {
+			createDoors();
+		}
 	}
 }
 
@@ -420,6 +464,8 @@ function useRune() {
 		else if (character.currentRune == "Dagaz rune") { //This will full heal the characters health and mana
 			character.health = character.maxHealth;
 			character.mana = character.maxMana;
+			document.getElementById("manaBar").setAttribute("value", 100)
+			document.getElementById("healthBar").setAttribute("value", 100)
 		}
 		character.currentRune = "";
 	}
@@ -560,6 +606,94 @@ function getRandomPosition(){
 	}
 	return [x*10,y*10];
 }
+//funtion casts a spell on the enemy standing next to the player
+function castSpell(){
+	if(!paused && character.mana >= 10){
+		if(facing == "up"){
+			var enemy=enemyAdjacent(character, "up");
+			enemy.health = attackSpell(curSpell, enemy);
+			document.getElementById("manaBar").setAttribute("value", 100*(character.mana/character.maxMana))
+			ctx.clearRect(enemy.position[0],enemy.position[1]+40,20,4);
+			drawHealthBar(enemy);
+			if(enemy.health<=0){
+				removeLivingEntity(enemy);
+			}
+		}
+		else if(facing == "right"){
+			var enemy=enemyAdjacent(character, "right");
+			enemy.health = attackSpell(curSpell, enemy);
+			document.getElementById("manaBar").setAttribute("value", 100*(character.mana/character.maxMana))
+			ctx.clearRect(enemy.position[0],enemy.position[1]+40,20,4);
+			drawHealthBar(enemy);
+			if(enemy.health<=0){
+				removeLivingEntity(enemy);
+			}
+		}
+		else if(facing == "left"){
+			var enemy=enemyAdjacent(character, "left");
+			enemy.health = attackSpell(curSpell, enemy);
+			document.getElementById("manaBar").setAttribute("value", 100*(character.mana/character.maxMana))
+			ctx.clearRect(enemy.position[0],enemy.position[1]+40,20,4);
+			drawHealthBar(enemy);
+			if(enemy.health<=0){
+				removeLivingEntity(enemy);
+			}
+		}
+		else if(facing == "down"){
+			var enemy=enemyAdjacent(character, "down");
+			enemy.health = attackSpell(curSpell, enemy);
+			document.getElementById("manaBar").setAttribute("value", 100*(character.mana/character.maxMana))
+			ctx.clearRect(enemy.position[0],enemy.position[1]+40,20,4);
+			drawHealthBar(enemy);
+			if(enemy.health<=0){
+				removeLivingEntity(enemy);
+			}
+		}
+
+	}
+}
+
+function attackSpell(num, curEnemy){
+	if(num === "1" && character.mana >= 5){
+		curEnemy.health-=20;
+		character.mana -= 5;
+		return curEnemy.health;
+	} else if (num === "2" && character.mana >= 3){
+		curEnemy.health -=15;
+		character.mana -=3;
+		return curEnemy.health;
+	} else if (num === "3" && character.mana >= 10){
+		curEnemy.health -=25;
+		character.mana -=10;
+		return curEnemy.health;
+	}
+	return curEnemy.health;
+}
+
+function chooseSpell(){
+	if(level === 1) {
+		curSpell = "1";
+	} else if (level === 2 && window.confirm("Change Spell?")){
+		curSpell = window.prompt("1. Fireball Attack\n" +
+			"2. Ice Attack\n" + "Choose Spell: ");
+
+	} else if(level >= 3 && window.confirm("Change Spell?")){
+		curSpell = window.prompt("1. Fireball Attack\n" +
+			"2. Ice Attack\n" +
+			"3. Ground Attack\n" + "Choose Spell: ");
+	}
+
+	if(curSpell === "1" || curSpell === "Fireball Attack"){
+		curSpell = "1";
+		alert("Your Current Spell is Fireball Attack");
+	} else if (curSpell === "2" || curSpell === "Ice Attack"){
+		curSpell = "2";
+		alert("Your Current Spell is Ice Attack");
+	} else if (curSpell === "3" || curSpell === "Ground Attack"){
+		curSpell = "3";
+		alert("Your Current Spell is Ground Attack");
+	}
+}
 
 //function attacks an enemy standing directly next to player, will add functionality for archer later
 function attack() {
@@ -569,7 +703,7 @@ function attack() {
 			enemy.health-=10;
 			ctx.clearRect(enemy.position[0],enemy.position[1]+40,20,4);
 			drawHealthBar(enemy);
-			if(enemy.health==0){
+			if(enemy.health<=0){
 				removeLivingEntity(enemy);
 			}
 		}else if(facing=="right"){
@@ -577,7 +711,7 @@ function attack() {
 			enemy.health-=10;
 			ctx.clearRect(enemy.position[0],enemy.position[1]+40,20,4);
 			drawHealthBar(enemy);
-			if(enemy.health==0){
+			if(enemy.health<=0){
 				removeLivingEntity(enemy);
 			}
 		}else if(facing=="left"){
@@ -585,7 +719,7 @@ function attack() {
 			enemy.health-=10;
 			ctx.clearRect(enemy.position[0],enemy.position[1]+40,20,4);
 			drawHealthBar(enemy);
-			if(enemy.health==0){
+			if(enemy.health<=0){
 				removeLivingEntity(enemy);
 			}
 		}else if (facing=="down"){
@@ -593,11 +727,20 @@ function attack() {
 			enemy.health-=10;
 			ctx.clearRect(enemy.position[0],enemy.position[1]+40,20,4);
 			drawHealthBar(enemy);
-			if(enemy.health==0){
+			if(enemy.health<=0){
 				removeLivingEntity(enemy);
 			}
 		}
 	}
+}
+
+function createStairs() {
+	//top door
+	stairsActive = true;
+	ctx.beginPath();
+	ctx.rect(1300,0,100,100);
+	ctx.fillStyle="gray";
+	ctx.fill();
 }
 
 function createDoors() {
@@ -677,6 +820,11 @@ function pause(){
 function enemyAttack(){
 	character.health -= 5;
 	document.getElementById("healthBar").setAttribute("value",100*(character.health/character.maxHealth));
+}
+
+function goToNextFloor(){
+	floor++;
+	loadNewRoom();
 }
 
 //function that allows enemies to move toward the user to attack
