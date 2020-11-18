@@ -14,6 +14,8 @@ var spawnSide = "";
 var xPos; //the X coordinate of the character
 var yPos; //the Y coordinate of the character
 character.position=[xPos,yPos];//for more continutity of entites
+character.width = 20;
+character.height=40;
 var facing = "right"; //direction player last moved, used for directing
 var canvas = document.getElementById("myCanvas"); //the canvas that is the map
 var ctx = canvas.getContext("2d"); //canvas editor
@@ -82,11 +84,6 @@ function loadNewRoom() {
 //function is unnecessary unless we create a map more complicated than one big room
 //the only thing it does rn is spawn the character
 function createMap() {
-	// ctx.beginPath();
-	// ctx.rect(startxPos,startyPos,20,40);
-	// ctx.fillStyle="white";
-	// ctx.fill();
-	// ctx.drawImage(person,startxPos,startyPos,20,40);
 	drawPlayer(startxPos,startyPos);
 	xPos = startxPos;
 	yPos = startyPos;
@@ -94,10 +91,10 @@ function createMap() {
 
 function drawPlayer(x,y){
 	ctx.beginPath();
-	ctx.rect(x,y,20,40);
+	ctx.rect(x,y,character.width,character.height);
 	ctx.fillStyle="white";
 	ctx.fill();
-	ctx.drawImage(person,x,y,20,40);
+	ctx.drawImage(person,x,y,character.width,character.height);
 }
 
 //function that checks for arrow key presses
@@ -202,26 +199,22 @@ function move(direction){
 	// alert(clearPath("down"));
 	if(!paused){
 		if(direction=="right" && clearPath(character, direction)){ //&& xPos!=1370
-			ctx.clearRect(xPos,yPos,20,40);
-			//ctx.drawImage(person,xPos+stepPixels,yPos,20,40);
+			ctx.clearRect(xPos,yPos,character.width,character.height);
 			drawPlayer(xPos+stepPixels,yPos);
 			xPos+=stepPixels;
 		}
 		else if(direction=="left" && clearPath(character, direction)){ //&& xPos!=stepPixels 
-			ctx.clearRect(xPos,yPos,20,40); 
-			//ctx.drawImage(person,xPos-stepPixels,yPos,20,40);
+			ctx.clearRect(xPos,yPos,character.width,character.height); 
 			drawPlayer(xPos-stepPixels,yPos);
 			xPos-=stepPixels;
 		}
 		else if(direction=="down" && clearPath(character, direction)){ //&& yPos!=640
-			ctx.clearRect(xPos,yPos,20,40);
-			//ctx.drawImage(person,xPos,yPos+stepPixels,20,40);
+			ctx.clearRect(xPos,yPos,character.width,character.height);
 			drawPlayer(xPos,yPos+stepPixels);
 			yPos+=stepPixels;
 		}
 		else if(direction=="up" && clearPath(character, direction)){ //&& yPos!=stepPixels
-			ctx.clearRect(xPos,yPos,20,40); // exactly person sized
-			//ctx.drawImage(person,xPos,yPos-stepPixels,20,40);
+			ctx.clearRect(xPos,yPos,character.width,character.height); // exactly person sized
 			drawPlayer(xPos,yPos-stepPixels);
 			yPos-=stepPixels;
 		}
@@ -307,11 +300,11 @@ function collectObjects() {
 
 //a function that verifies a players ability to move
 function clearPath(entity, direction){
-	if(direction=="right" && (entity.position[0]==1380 || enemyAdjacent(entity, "right")!=null)) {
+	if(direction=="right" && (entity.position[0]==(1400-entity.width) || enemyAdjacent(entity, "right")!=null)) {
 		return false;
 	}else if(direction == "left" && (entity.position[0]==0 || enemyAdjacent(entity, "left")!=null)) {
 		return false;
-	}else if(direction == "down" && (entity.position[1]==660 || enemyAdjacent(entity, "down")!=null)) {
+	}else if(direction == "down" && (entity.position[1]==(700-entity.height) || enemyAdjacent(entity, "down")!=null)) {
 		return false;
 	}else if(direction =="up" && (entity.position[1]==0 || enemyAdjacent(entity, "up")!=null)) {
 		return false;
@@ -324,26 +317,26 @@ function enemyAdjacent(entity, direction){
 	for(var i = 0; i < livingEntities.length; i++){
 		if(livingEntities[i]!=entity){
 			if(direction=="right"){
-				if(livingEntities[i].position[0]==entity.position[0]+20){
-					if(livingEntities[i].position[1]<entity.position[1]+40 && livingEntities[i].position[1]>entity.position[1]-40){
+				if(livingEntities[i].position[0]==entity.position[0]+entity.width){
+					if(livingEntities[i].position[1]<entity.position[1]+entity.height && livingEntities[i].position[1]>entity.position[1]-livingEntities[i].height){
 						return livingEntities[i];
 					}
 				}
 			}else if(direction=="left"){
-				if(livingEntities[i].position[0]==entity.position[0]-20){
-					if(livingEntities[i].position[1]<entity.position[1]+40 && livingEntities[i].position[1]>entity.position[1]-40){
+				if(livingEntities[i].position[0]==entity.position[0]-livingEntities[i].width){
+					if(livingEntities[i].position[1]<entity.position[1]+entity.height && livingEntities[i].position[1]>entity.position[1]-livingEntities[i].height){
 						return livingEntities[i];
 					}
 				}
 			}else if(direction=="up"){
-				if(livingEntities[i].position[0]<entity.position[0]+20 && livingEntities[i].position[0]>entity.position[0]-20){
-					if(livingEntities[i].position[1]==entity.position[1]-40){
+				if(livingEntities[i].position[0]<entity.position[0]+entity.width && livingEntities[i].position[0]>entity.position[0]-livingEntities[i].width){
+					if(livingEntities[i].position[1]==entity.position[1]-livingEntities[i].height){
 						return livingEntities[i];
 					}
 				}
 			}else if(direction=="down"){
-				if(livingEntities[i].position[0]<entity.position[0]+20 && livingEntities[i].position[0]>entity.position[0]-20){
-					if(livingEntities[i].position[1]==entity.position[1]+40){
+				if(livingEntities[i].position[0]<entity.position[0]+entity.width && livingEntities[i].position[0]>entity.position[0]-livingEntities[i].width){
+					if(livingEntities[i].position[1]==entity.position[1]+entity.height){
 						return livingEntities[i];
 					}
 				}
@@ -440,7 +433,7 @@ function checkIfRoomClear() {
 //function to remove an entity from the array
 function removeLivingEntity(entity){
 	var temp = [];
-	ctx.clearRect(entity.position[0],entity.position[1],20,44);
+	ctx.clearRect(entity.position[0],entity.position[1],entity.width,entity.height+4);
 	var x = livingEntities.length;
 	for(var i = 0;i < x; i++){
 		temp.push(livingEntities.shift());
@@ -584,6 +577,8 @@ function spawnEnemies(){
 		enemy.position=getRandomPosition();
 		enemy.strength=level;
 		enemy.health=100;
+		enemy.width=40;
+		enemy.height=80;
 		if(i%2 == 0){
 			enemy.type="archer";
 		}else{
@@ -592,7 +587,7 @@ function spawnEnemies(){
 		//add them to the array of living entites
 		addToLivingEntities(enemy);
 		//draw person with red rectangle to symbolize bad guy
-		drawEnemy(enemy.position[0],enemy.position[1]);
+		drawEnemy(enemy.position[0],enemy.position[1], enemy);
 		drawHealthBar(enemy);
 	}
 }
@@ -705,49 +700,33 @@ function attack() {
 		if(character.gameClass == "warrior"){
 			if(facing=="up"){
 				var enemy=enemyAdjacent(character, "up");
-				enemy.health-=10;
-				ctx.clearRect(enemy.position[0],enemy.position[1]+40,20,4);
-				drawHealthBar(enemy);
-				if(enemy.health<=0){
-					removeLivingEntity(enemy);
-				}
+				damage(enemy, 10);
 			}else if(facing=="right"){
 				var enemy=enemyAdjacent(character, "right");
-				enemy.health-=10;
-				ctx.clearRect(enemy.position[0],enemy.position[1]+40,20,4);
-				drawHealthBar(enemy);
-				if(enemy.health<=0){
-					removeLivingEntity(enemy);
-				}
+				damage(enemy, 10);
 			}else if(facing=="left"){
 				var enemy=enemyAdjacent(character, "left");
-				enemy.health-=10;
-				ctx.clearRect(enemy.position[0],enemy.position[1]+40,20,4);
-				drawHealthBar(enemy);
-				if(enemy.health<=0){
-					removeLivingEntity(enemy);
-				}
+				damage(enemy, 10);
 			}else if (facing=="down"){
 				var enemy=enemyAdjacent(character, "down");
-				enemy.health-=10;
-				ctx.clearRect(enemy.position[0],enemy.position[1]+40,20,4);
-				drawHealthBar(enemy);
-				if(enemy.health<=0){
-					removeLivingEntity(enemy);
-				}
+				damage(enemy, 10);
 			}
 		}else if(character.gameClass == "ranger"){
 			let nearestEnemy = getNearestEnemy(character);
 			//shoot(nearestEnemy);
 			if(enemyInRange(character, nearestEnemy)){
-				nearestEnemy.health-=10;
-				ctx.clearRect(nearestEnemy.position[0],nearestEnemy.position[1]+40,20,4);
-				drawHealthBar(nearestEnemy);
-				if(nearestEnemy.health<=0){
-					removeLivingEntity(nearestEnemy);
-				}
+				damage(nearestEnemy, 10);
 			}
 		}
+	}
+}
+
+function damage(enemy, damage){
+	enemy.health-=damage;
+	ctx.clearRect(enemy.position[0],enemy.position[1]+enemy.height,enemy.width,4);
+	drawHealthBar(enemy);
+	if(enemy.health<=0){
+		removeLivingEntity(enemy);
 	}
 }
 
@@ -910,53 +889,48 @@ function enemyMove(enemy){
 		}
 	}
 	if(direction=="right" && clearPath(enemy, direction)){ //change clear path function to accept a 2nd parameter of entity, so that clear path checks per user/enemy
-		ctx.clearRect(enemy.position[0],enemy.position[1],20,44);
-		//ctx.clearRect(xPos-10,yPos-10,42,70);
-		//ctx.drawImage(person,xPos+stepPixels,yPos,20,40);
-		drawEnemy(enemy.position[0]+10,enemy.position[1]);
+		ctx.clearRect(enemy.position[0],enemy.position[1],enemy.width,enemy.height+4);
+		drawEnemy(enemy.position[0]+10,enemy.position[1], enemy);
 		enemy.position[0]+=stepPixels;
 		drawHealthBar(enemy);
 	}
 	else if(direction=="left" && clearPath(enemy, direction)){
-		ctx.clearRect(enemy.position[0],enemy.position[1],20,44);
-		//ctx.clearRect(xPos-10,yPos-10,42,70);
-		drawEnemy(enemy.position[0]-10,enemy.position[1]);
+		ctx.clearRect(enemy.position[0],enemy.position[1],enemy.width,enemy.height+4);
+		drawEnemy(enemy.position[0]-10,enemy.position[1], enemy);
 		enemy.position[0]-=stepPixels;
 		drawHealthBar(enemy);
 	}
 	else if(direction=="down" && clearPath(enemy, direction)){
-		ctx.clearRect(enemy.position[0],enemy.position[1],20,44);
-		//ctx.clearRect(xPos-10,yPos-10,42,70);
-		drawEnemy(enemy.position[0],enemy.position[1]+10);
+		ctx.clearRect(enemy.position[0],enemy.position[1],enemy.width,enemy.height+4);
+		drawEnemy(enemy.position[0],enemy.position[1]+10, enemy);
 		enemy.position[1]+=stepPixels;
 		drawHealthBar(enemy);
 	}
 	else if(direction=="up" && clearPath(enemy, direction)){
-		ctx.clearRect(enemy.position[0],enemy.position[1],20,44);// exactly person sized
-		//ctx.clearRect(xPos-10,yPos-10,42,70); //bigger rectangle to erase attack
-		drawEnemy(enemy.position[0],enemy.position[1]-10);
+		ctx.clearRect(enemy.position[0],enemy.position[1],enemy.width,enemy.height+4);// exactly person sized
+		drawEnemy(enemy.position[0],enemy.position[1]-10, enemy);
 		enemy.position[1]-=stepPixels;
 		drawHealthBar(enemy);
 	}
 }
 
-function drawEnemy(x,y){
+function drawEnemy(x,y, enemy){
 	ctx.beginPath();
-	ctx.rect(x,y,20,40);
+	ctx.rect(x,y,enemy.width,enemy.height);
 	ctx.fillStyle="white";
 	ctx.fill();
-	ctx.drawImage(person,x,y,20,40);
+	ctx.drawImage(person,x,y,enemy.width,enemy.height);
 	ctx.beginPath();
 	ctx.lineWidth = "1";
 	ctx.strokeStyle = "red";
-	ctx.rect(x+2, y+2, 16, 36);
+	ctx.rect(x+2, y+2, enemy.width-4, enemy.height-4);
 	ctx.stroke();
 }
 
 function drawHealthBar(enemy){
-	var x = enemy.health/5
+	var x = enemy.width*(enemy.health/100)
 	ctx.beginPath();
-	ctx.rect(enemy.position[0],enemy.position[1]+40,x,4);
+	ctx.rect(enemy.position[0],enemy.position[1]+enemy.height,x,4);
 	ctx.fillStyle="red";
 	ctx.fill();
 }
