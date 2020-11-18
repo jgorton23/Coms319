@@ -584,7 +584,11 @@ function spawnEnemies(){
 		enemy.position=getRandomPosition();
 		enemy.strength=level;
 		enemy.health=100;
-		enemy.type="closeRange";
+		if(i%2 == 0){
+			enemy.type="archer";
+		}else{
+			enemy.type="closeRange";
+		}
 		//add them to the array of living entites
 		addToLivingEntities(enemy);
 		//draw person with red rectangle to symbolize bad guy
@@ -698,39 +702,80 @@ function chooseSpell(){
 //function attacks an enemy standing directly next to player, will add functionality for archer later
 function attack() {
 	if(!paused){
-		if(facing=="up"){
-			var enemy=enemyAdjacent(character, "up");
-			enemy.health-=10;
-			ctx.clearRect(enemy.position[0],enemy.position[1]+40,20,4);
-			drawHealthBar(enemy);
-			if(enemy.health<=0){
-				removeLivingEntity(enemy);
+		if(character.gameClass == "warrior"){
+			if(facing=="up"){
+				var enemy=enemyAdjacent(character, "up");
+				enemy.health-=10;
+				ctx.clearRect(enemy.position[0],enemy.position[1]+40,20,4);
+				drawHealthBar(enemy);
+				if(enemy.health<=0){
+					removeLivingEntity(enemy);
+				}
+			}else if(facing=="right"){
+				var enemy=enemyAdjacent(character, "right");
+				enemy.health-=10;
+				ctx.clearRect(enemy.position[0],enemy.position[1]+40,20,4);
+				drawHealthBar(enemy);
+				if(enemy.health<=0){
+					removeLivingEntity(enemy);
+				}
+			}else if(facing=="left"){
+				var enemy=enemyAdjacent(character, "left");
+				enemy.health-=10;
+				ctx.clearRect(enemy.position[0],enemy.position[1]+40,20,4);
+				drawHealthBar(enemy);
+				if(enemy.health<=0){
+					removeLivingEntity(enemy);
+				}
+			}else if (facing=="down"){
+				var enemy=enemyAdjacent(character, "down");
+				enemy.health-=10;
+				ctx.clearRect(enemy.position[0],enemy.position[1]+40,20,4);
+				drawHealthBar(enemy);
+				if(enemy.health<=0){
+					removeLivingEntity(enemy);
+				}
 			}
-		}else if(facing=="right"){
-			var enemy=enemyAdjacent(character, "right");
-			enemy.health-=10;
-			ctx.clearRect(enemy.position[0],enemy.position[1]+40,20,4);
-			drawHealthBar(enemy);
-			if(enemy.health<=0){
-				removeLivingEntity(enemy);
-			}
-		}else if(facing=="left"){
-			var enemy=enemyAdjacent(character, "left");
-			enemy.health-=10;
-			ctx.clearRect(enemy.position[0],enemy.position[1]+40,20,4);
-			drawHealthBar(enemy);
-			if(enemy.health<=0){
-				removeLivingEntity(enemy);
-			}
-		}else if (facing=="down"){
-			var enemy=enemyAdjacent(character, "down");
-			enemy.health-=10;
-			ctx.clearRect(enemy.position[0],enemy.position[1]+40,20,4);
-			drawHealthBar(enemy);
-			if(enemy.health<=0){
-				removeLivingEntity(enemy);
+		}else if(character.gameClass == "ranger"){
+			let nearestEnemy = getNearestEnemy(character);
+			//shoot(nearestEnemy);
+			if(enemyInRange(character, nearestEnemy)){
+				nearestEnemy.health-=10;
+				ctx.clearRect(nearestEnemy.position[0],nearestEnemy.position[1]+40,20,4);
+				drawHealthBar(nearestEnemy);
+				if(nearestEnemy.health<=0){
+					removeLivingEntity(nearestEnemy);
+				}
 			}
 		}
+	}
+}
+
+function getDistance(entity, entity2){
+	return ((entity.position[0]-entity2.position[0])*(entity.position[0]-entity2.position[0])+(entity.position[1]-entity2.position[1])*(entity.position[1]-entity2.position[1]));
+}
+
+function getNearestEnemy(entity){
+	var first = true;
+	var nearest;
+	for(var i = 0; i < livingEntities.length; i++){
+		if(livingEntities[i] != entity){
+			if(first){
+				nearest = livingEntities[i];
+				first = false;
+			}else{
+				if(getDistance(livingEntities[i], entity)<getDistance(nearest, entity)){
+					nearest = livingEntities[i];
+				}
+			}
+		}
+	}
+	return nearest;
+}
+
+function enemyInRange(entity, enemy){
+	if (getDistance(entity, enemy)<50000){
+		return true;
 	}
 }
 
