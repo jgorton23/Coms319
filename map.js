@@ -137,6 +137,10 @@ function usePotion(type){
 	}
 }
 
+function useCoal() {
+
+}
+
 //function that handles arrow key presses
 function move(direction){
 	if (livingEntities.length == 1)	{
