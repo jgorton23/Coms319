@@ -147,7 +147,12 @@ function usePotion(type){
 
 //For every 4 coals, the user can choose to make 1 gold
 function useCoal() {
-
+	const amountCoal = 4;
+	if (inventory["Coal"] >= amountCoal && window.confirm("Sell " + amountCoal + " coal for 1 gold?")) {
+		inventory["Coal"] -= amountCoal;
+		inventory["Gold"]++;
+		drawInventory();
+	}
 }
 
 //function that handles arrow key presses
@@ -271,6 +276,7 @@ function collectObjects() {
 		inventoryMap[row][col] = 0;
 		addToInventory("Coal");
 		addPoints(50);
+		useCoal();
 	}
 	if (character.currentRune === "") {
 		if (inventoryMap[row][col] === 101) {
