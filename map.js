@@ -11,6 +11,8 @@ var levelContainer = document.getElementById("levelContent");
 var startxPos = 670;
 var startyPos = 360;
 var spawnSide = "";
+var trapXPos;
+var trapYPos;
 var xPos; //the X coordinate of the character
 var yPos; //the Y coordinate of the character
 character.position=[xPos,yPos];//for more continutity of entites
