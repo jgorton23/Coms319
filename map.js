@@ -39,7 +39,7 @@ const numAlgiz = 5;
 const numMannaz = 5;
 const numDagaz = 5;
 const numGoldCoins = 5;
-const numCoal = 5;
+const numCoal = 10;
 const heightPixels = 700;
 const widthPixels = 1400;
 const stepPixels = 10;
@@ -137,6 +137,7 @@ function usePotion(type){
 	}
 }
 
+//For every 4 coals, the user can choose to make 1 gold
 function useCoal() {
 
 }
