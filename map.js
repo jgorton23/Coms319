@@ -45,7 +45,7 @@ const numAlgiz = 5;
 const numMannaz = 5;
 const numDagaz = 5;
 const numGoldCoins = 5;
-const numCoal = 5;
+const numCoal = 10;
 const heightPixels = 700;
 const widthPixels = 1400;
 const stepPixels = 10;
@@ -118,19 +118,39 @@ function checkKey(e) {
 		move("right");
 	}else if (e.keyCode == '66') {// B key
 		useRune();
+		unshield();
 	}else if (e.keyCode == '77') {// m key
 		usePotion("health");
+		unshield();
 	}else if (e.keyCode == '78') {// n key
 		usePotion("mana");
+		unshield();
 	}else if (e.keyCode == '32') {// space bar
 		attack();
+		unshield();
 		checkIfRoomClear();
-	}else if(e.keyCode == '83'){ // s key
+	}else if(e.keyCode == '83') { // s key
 		castSpell();
+		unshield();
 		checkIfRoomClear();
-	}else if(e.keyCode == '68'){ // D key
-		shielding = true;
+	}else if(e.keyCode == '68') { // D key
+		shield();
 	}
+}
+
+function shield(){
+	shielding = true;
+	ctx.beginPath();
+	ctx.lineWidth = "1";
+	ctx.strokeStyle = "blue";
+	ctx.rect(xPos+2, yPos+2, character.width-4, character.height-4);
+	ctx.stroke();
+}
+
+function unshield(){
+	shielding = false;
+	ctx.clearRect(xPos,yPos,character.width,character.height);
+	drawPlayer(xPos,yPos);
 }
 
 //function to use a potion of 2 different types
@@ -147,12 +167,23 @@ function usePotion(type){
 	}
 }
 
+<<<<<<< HEAD
 function createTrap() {
 	trapActive = true;
 	let randN = Math.floor(Math.random() * 1300);
 	trapXPos = randN;
 	randN = Math.floor(Math.random() * 580);
 	trapYPos = randN;
+=======
+//For every 4 coals, the user can choose to make 1 gold
+function useCoal() {
+	const amountCoal = 4;
+	if (inventory["Coal"] >= amountCoal && window.confirm("Sell " + amountCoal + " coal for 1 gold?")) {
+		inventory["Coal"] -= amountCoal;
+		inventory["Gold"]++;
+		drawInventory();
+	}
+>>>>>>> 25fab10edbab4367514519a326e159cfd14aa34f
 }
 
 //function that handles arrow key presses
@@ -220,7 +251,8 @@ function move(direction){
 	
 	facing=direction;
 	// alert(clearPath("down"));
-	if(!paused && !shielding){
+	if(!paused){
+		unshield();
 		if(direction=="right" && clearPath(character, direction)){ //&& xPos!=1370
 			ctx.clearRect(xPos,yPos,character.width,character.height);
 			drawPlayer(xPos+stepPixels,yPos);
@@ -284,6 +316,7 @@ function collectObjects() {
 		inventoryMap[row][col] = 0;
 		addToInventory("Coal");
 		addPoints(50);
+		useCoal();
 	}
 	if (character.currentRune === "") {
 		if (inventoryMap[row][col] === 101) {
@@ -596,8 +629,8 @@ function spawnEnemies(){
 		enemy.position=getRandomPosition();
 		enemy.strength=level;
 		enemy.health=100;
-		enemy.width=40;
-		enemy.height=80;
+		enemy.width=20;
+		enemy.height=40;
 		if(i%2 == 0){
 			enemy.type="archer";
 		}else{
@@ -864,8 +897,10 @@ function pause(){
 
 //function that does damage to the player when an enemy hits them
 function enemyAttack(){
-	character.health -= 5;
-	document.getElementById("healthBar").setAttribute("value",100*(character.health/character.maxHealth));
+	if(!shielding){
+		character.health -= 5;
+		document.getElementById("healthBar").setAttribute("value",100*(character.health/character.maxHealth));
+	}
 }
 
 function goToNextFloor(){
