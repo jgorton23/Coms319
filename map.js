@@ -174,6 +174,7 @@ function createTrap() {
 	trapXPos = randN;
 	randN = Math.floor(Math.random() * 580);
 	trapYPos = randN;
+}
 
 //For every 4 coals, the user can choose to make 1 gold
 function useCoal() {
