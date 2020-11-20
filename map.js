@@ -505,6 +505,7 @@ function removeLivingEntity(entity){
 
 function useRune() {
 	if(!paused){
+		document.getElementById("potion").setAttribute("src",);
 		if (character.currentRune == "Algiz rune") { //This will damage everything in the room
 			for (let ind = 0; ind < livingEntities.length; ind++) {
 				livingEntities[ind].health -= 10;
@@ -794,15 +795,30 @@ function attack() {
 }
 
 function shoot(entityFrom, entityTo){
-	var fromX = entityFrom.position[0]+(entityFrom.width/2);
-	var fromY = entityFrom.position[1]+(entityFrom.height/2);
+	var fromX;
+	var fromY;
+	var toX;
+	var toY;
+
 	if(enemyInRange(entityFrom,entityTo)){
+		if(entityFrom.position[0]<entityTo.position[0]){
+			fromX = entityFrom.position[0]+(entityFrom.width);
+			fromY = entityFrom.position[1]+(entityFrom.height/2);
+		}else if(entityFrom.position[0]>entityTo.position[0]){
+			fromX = entityFrom.position[0];
+			fromY = entityFrom.position[1]+(entityFrom.height/2);
+		}else{
+			fromX = entityFrom.position[0]+entityFrom.width/2;
+			if(entityFrom.position[1]<entityTo.position[1]){
+				fromY = entityFrom.position[1]+entityFrom.height
+			}else{
+				fromY = entityFrom.position[1];
+			}
+		}
 		var toX = entityTo.position[0]+(entityTo.width/2);
 		var toY = entityTo.position[1]+(entityTo.height/2);
-	}else{
-
+		arrowList.push([fromX,fromY,toX,toY]);
 	}
-	arrowList.push([fromX,fromY,toX,toY]);
 }
 
 function damage(enemy, damage){
@@ -919,7 +935,7 @@ function pause(){
 				}
 			}
 			updateArrows();
-			if(character.health === 0){
+			if(character.health <= 0){
 				window.location.href = "gameOver.html";
 			}
 		},25);
