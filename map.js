@@ -116,15 +116,20 @@ function checkKey(e) {
 		move("right");
 	}else if (e.keyCode == '66') {// B key
 		useRune();
+		unshield();
 	}else if (e.keyCode == '77') {// m key
 		usePotion("health");
+		unshield();
 	}else if (e.keyCode == '78') {// n key
 		usePotion("mana");
+		unshield();
 	}else if (e.keyCode == '32') {// space bar
 		attack();
+		unshield();
 		checkIfRoomClear();
 	}else if(e.keyCode == '83') { // s key
 		castSpell();
+		unshield();
 		checkIfRoomClear();
 	}else if(e.keyCode == '68') { // D key
 		shield();
