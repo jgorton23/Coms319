@@ -73,6 +73,7 @@ function initializeGame() {
 
 
 function loadNewRoom() {
+	arrowList=[];
 	level++;
 	drawLevel();
 	inventoryMap = [];
@@ -961,6 +962,10 @@ function updateArrows(){
 
 		ctx.lineTo(arrowList[i][0], arrowList[i][1]);
 		ctx.stroke();
+
+		if(Math.abs(arrowList[i][0]-arrowList[i][2])<5 && Math.abs(arrowList[i][1] == arrowList[i][3])<5){
+			arrowList.splice(i);
+		}
 	}
 }
 
