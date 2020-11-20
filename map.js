@@ -13,6 +13,7 @@ var startyPos = 360;
 var spawnSide = "";
 var trapXPos;
 var trapYPos;
+var trapActive = false;
 var xPos; //the X coordinate of the character
 var yPos; //the Y coordinate of the character
 character.position=[xPos,yPos];//for more continutity of entites
@@ -88,6 +89,7 @@ function loadNewRoom() {
 //the only thing it does rn is spawn the character
 function createMap() {
 	drawPlayer(startxPos,startyPos);
+	createTrap();
 	xPos = startxPos;
 	yPos = startyPos;
 }
@@ -145,8 +147,24 @@ function usePotion(type){
 	}
 }
 
+function createTrap() {
+	trapActive = true;
+	let randN = Math.floor(Math.random() * 1300);
+	trapXPos = randN;
+	randN = Math.floor(Math.random() * 580);
+	trapYPos = randN;
+}
+
 //function that handles arrow key presses
 function move(direction){
+	if ((trapActive) && ((xPos - trapXPos <= 30) || (trapXPos - xPos >= 30)) && ((yPos - trapYPos <= 30) || (trapYPos - yPos >= 30))) {
+		character.health -= (character.maxHealth/4);
+		if(character.health <= 0){
+			window.location.href = "gameOver.html";
+		}
+		trapActive = false;
+		document.getElementById("healthBar").setAttribute("value",100*(character.health/character.maxHealth));
+	}
 	if (livingEntities.length == 1)	{
 		//top door
 		//630 - 750
