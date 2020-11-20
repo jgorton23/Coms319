@@ -11,6 +11,8 @@ var levelContainer = document.getElementById("levelContent");
 var startxPos = 670;
 var startyPos = 360;
 var spawnSide = "";
+var trapXPos;
+var trapYPos;
 var xPos; //the X coordinate of the character
 var yPos; //the Y coordinate of the character
 character.position=[xPos,yPos];//for more continutity of entites
@@ -42,7 +44,7 @@ const numAlgiz = 5;
 const numMannaz = 5;
 const numDagaz = 5;
 const numGoldCoins = 5;
-const numCoal = 5;
+const numCoal = 10;
 const heightPixels = 700;
 const widthPixels = 1400;
 const stepPixels = 10;
@@ -155,6 +157,16 @@ function usePotion(type){
 		character.manaPotions--;
 		character.mana = character.maxMana;
 		document.getElementById("manaBar").setAttribute("value",100);
+	}
+}
+
+//For every 4 coals, the user can choose to make 1 gold
+function useCoal() {
+	const amountCoal = 4;
+	if (inventory["Coal"] >= amountCoal && window.confirm("Sell " + amountCoal + " coal for 1 gold?")) {
+		inventory["Coal"] -= amountCoal;
+		inventory["Gold"]++;
+		drawInventory();
 	}
 }
 
@@ -280,6 +292,7 @@ function collectObjects() {
 		inventoryMap[row][col] = 0;
 		addToInventory("Coal");
 		addPoints(50);
+		useCoal();
 	}
 	if (character.currentRune === "") {
 		if (inventoryMap[row][col] === 101) {
