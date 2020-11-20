@@ -51,6 +51,7 @@ const stepPixels = 10;
 const numOfRows = heightPixels/stepPixels;
 const numOfColumns = widthPixels/stepPixels;
 var curSpell;
+var arrowList = [];
 
 function initializeGame() {
 	addToLivingEntities(character);
@@ -303,33 +304,39 @@ function collectObjects() {
 	if (character.currentRune === "") {
 		if (inventoryMap[row][col] === 101) {
 			inventoryMap[row][col] = 0;
+			document.getElementById("potion").setAttribute("src","./blue_potion.png");
 			character.currentRune = "Algiz rune";   //This will damage everything in the room
 			addPoints(200);
 		} else if (inventoryMap[row][col] === 102) {
 			inventoryMap[row][col] = 0;
+			document.getElementById("potion").setAttribute("src","./red_potion.png");
 			character.currentRune = "Mannaz rune";  //This will double the amount of gold the character is holding
 			inventory["Gold"] *= 2;
 			drawInventory();
 			addPoints(200);
 		} else if (inventoryMap[row][col] === 103) {
 			inventoryMap[row][col] = 0;
+			document.getElementById("potion").setAttribute("src","./green_potion.png");
 			character.currentRune = "Dagaz rune";   //This will full heal the characters health and mana
 			addPoints(200);
 		}
 	} else {
 		if (inventoryMap[row][col] === 101 && window.confirm("Change Rune?")) {
 			inventoryMap[row][col] = 0;
+			document.getElementById("potion").setAttribute("src","./blue_potion.png");
 			character.currentRune = "Algiz rune";   //This will damage everything in the room
 			console.log(character.currentRune);
 			addPoints(200);
 		} else if (inventoryMap[row][col] === 102 && window.confirm("Change Rune?")) {
 			inventoryMap[row][col] = 0;
+			document.getElementById("potion").setAttribute("src","./red_potion.png");
 			character.currentRune = "Mannaz rune";  //This will double the amount of gold the character is holding
 			inventory["Gold"] *= 2;
 			drawInventory();
 			addPoints(200);
 		} else if (inventoryMap[row][col] === 103 && window.confirm("Change Rune?")) {
 			inventoryMap[row][col] = 0;
+			document.getElementById("potion").setAttribute("src","./green_potion.png");
 			character.currentRune = "Dagaz rune";   //This will full heal the characters health and mana
 			addPoints(200);
 		}
@@ -760,12 +767,24 @@ function attack() {
 			}
 		}else if(character.gameClass == "ranger"){
 			let nearestEnemy = getNearestEnemy(character);
-			//shoot(nearestEnemy);
+			shoot(character, nearestEnemy);
 			if(enemyInRange(character, nearestEnemy)){
 				damage(nearestEnemy, 10);
 			}
 		}
 	}
+}
+
+function shoot(entityFrom, entityTo){
+	var fromX = entityFrom.position[0]+(entityFrom.width/2);
+	var fromY = entityFrom.position[1]+(entityFrom.height/2);
+	if(enemyInRange(entityFrom,entityTo)){
+		var toX = entityTo.position[0]+(entityTo.width/2);
+		var toY = entityTo.position[1]+(entityTo.height/2);
+	}else{
+
+	}
+	arrowList.push([fromX,fromY,toX,toY]);
 }
 
 function damage(enemy, damage){
@@ -869,7 +888,10 @@ function pause(){
 			if(q%10==0){
 				for(var i = 0; i < livingEntities.length; i++){
 					if(livingEntities[i]!=character){
-						if(livingEntities[i]==enemyAdjacent(character, "right") || livingEntities[i]==enemyAdjacent(character, "left") || livingEntities[i]==enemyAdjacent(character, "up") || livingEntities[i]==enemyAdjacent(character, "down")){
+						if((livingEntities[i].type == "closeRange" && (livingEntities[i]==enemyAdjacent(character, "right") || livingEntities[i]==enemyAdjacent(character, "left") || livingEntities[i]==enemyAdjacent(character, "up") || livingEntities[i]==enemyAdjacent(character, "down"))) || (livingEntities[i].type == "archer" && enemyInRange(livingEntities[i],character))){
+							if(livingEntities[i].type == "archer"){
+								shoot(livingEntities[i],character);
+							}
 							enemyAttack();
 						}
 						else{
@@ -878,6 +900,7 @@ function pause(){
 					}
 				}
 			}
+			updateArrows();
 			if(character.health === 0){
 				window.location.href = "gameOver.html";
 			}
@@ -887,6 +910,20 @@ function pause(){
 		clearInterval(timer);
 		paused=true;
 		document.getElementById("overlay").style.display = "block";
+	}
+}
+
+function updateArrows(){
+	for(var i = 0; i < arrowList.length;i++){
+		ctx.beginPath();
+		//alert(arrowList[i][0]+","+arrowList[i][1]+","+arrowList[i][2]+","+arrowList[i][3]);
+		ctx.moveTo(arrowList[i][0], arrowList[i][1]);
+		ctx.lineTo(arrowList[i][2], arrowList[i][3]);
+		ctx.lineWidth = 2;
+
+		// set line color
+		ctx.strokeStyle = '#ff0000';
+		ctx.stroke();
 	}
 }
 
