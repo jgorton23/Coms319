@@ -168,14 +168,13 @@ function usePotion(type){
 	}
 }
 
-<<<<<<< HEAD
 function createTrap() {
 	trapActive = true;
 	let randN = Math.floor(Math.random() * 1300);
 	trapXPos = randN;
 	randN = Math.floor(Math.random() * 580);
 	trapYPos = randN;
-=======
+
 //For every 4 coals, the user can choose to make 1 gold
 function useCoal() {
 	const amountCoal = 4;
@@ -184,7 +183,6 @@ function useCoal() {
 		inventory["Gold"]++;
 		drawInventory();
 	}
->>>>>>> 25fab10edbab4367514519a326e159cfd14aa34f
 }
 
 //function that handles arrow key presses
