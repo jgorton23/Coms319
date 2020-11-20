@@ -121,12 +121,27 @@ function checkKey(e) {
 	}else if (e.keyCode == '32') {// space bar
 		attack();
 		checkIfRoomClear();
-	}else if(e.keyCode == '83'){ // s key
+	}else if(e.keyCode == '83') { // s key
 		castSpell();
 		checkIfRoomClear();
-	}else if(e.keyCode == '68'){ // D key
-		shielding = true;
+	}else if(e.keyCode == '68') { // D key
+		shield();
 	}
+}
+
+function shield(){
+	shielding = true;
+	ctx.beginPath();
+	ctx.lineWidth = "1";
+	ctx.strokeStyle = "blue";
+	ctx.rect(xPos+2, yPos+2, character.width-4, character.height-4);
+	ctx.stroke();
+}
+
+function unshield(){
+	shielding = false;
+	ctx.clearRect(xPos,yPos,character.width,character.height);
+	drawPlayer(xPos,yPos);
 }
 
 //function to use a potion of 2 different types
@@ -200,7 +215,8 @@ function move(direction){
 	
 	facing=direction;
 	// alert(clearPath("down"));
-	if(!paused && !shielding){
+	if(!paused){
+		unshield();
 		if(direction=="right" && clearPath(character, direction)){ //&& xPos!=1370
 			ctx.clearRect(xPos,yPos,character.width,character.height);
 			drawPlayer(xPos+stepPixels,yPos);
@@ -576,8 +592,8 @@ function spawnEnemies(){
 		enemy.position=getRandomPosition();
 		enemy.strength=level;
 		enemy.health=100;
-		enemy.width=40;
-		enemy.height=80;
+		enemy.width=20;
+		enemy.height=40;
 		if(i%2 == 0){
 			enemy.type="archer";
 		}else{
@@ -844,8 +860,10 @@ function pause(){
 
 //function that does damage to the player when an enemy hits them
 function enemyAttack(){
-	character.health -= 5;
-	document.getElementById("healthBar").setAttribute("value",100*(character.health/character.maxHealth));
+	if(!shielding){
+		character.health -= 5;
+		document.getElementById("healthBar").setAttribute("value",100*(character.health/character.maxHealth));
+	}
 }
 
 function goToNextFloor(){
