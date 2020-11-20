@@ -953,7 +953,7 @@ function updateArrows(){
 		var r =  5;
 		var theta = Math.atan2(arrowList[i][3]-arrowList[i][1],arrowList[i][2]-arrowList[i][0]);
 		
-		//clearRect(arrowList[i][0],arrowList[i][1],-r * Math.cos(theta),-r * Math.sin(theta));
+		ctx.clearRect(arrowList[i][0],arrowList[i][1],-(r * Math.cos(theta)),-(r * Math.sin(theta)));
 		
 		ctx.moveTo(arrowList[i][0], arrowList[i][1]);
 
@@ -961,6 +961,7 @@ function updateArrows(){
 		arrowList[i][1]=arrowList[i][1] + r * Math.sin(theta);
 
 		ctx.lineTo(arrowList[i][0], arrowList[i][1]);
+		ctx.strokeStyle = "red";
 		ctx.stroke();
 
 		if(Math.abs(arrowList[i][0]-arrowList[i][2])<5 && Math.abs(arrowList[i][1] == arrowList[i][3])<5){
