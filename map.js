@@ -80,6 +80,7 @@ function loadNewRoom() {
 	spawnEnemies();
 	initializeInventory();
 	chooseSpell();
+	chooseUpgrade();
 	//pause();
 	checkIfRoomClear();
 }
@@ -743,6 +744,19 @@ function chooseSpell(){
 	} else if (curSpell === "3" || curSpell === "Ground Attack"){
 		curSpell = "3";
 		alert("Your Current Spell is Ground Attack");
+	}
+}
+
+function chooseUpgrade(){
+	var upgrade = window.prompt("Choose upgrade:\n 1) Health\n 2) Mana\n")
+	if(upgrade == "1"){
+		character.maxHealth+=10;
+		character.health+=10;
+		document.getElementById("healthBar").setAttribute("value",100*(character.health/character.maxHealth));
+	}else if(upgrade == "2"){
+		character.maxMana+=10;
+		character.mana+=10;
+		document.getElementById("manabar").setAttribute("value",100*(character.mana/character.maxMana));
 	}
 }
 
