@@ -53,6 +53,10 @@ const numOfRows = heightPixels/stepPixels;
 const numOfColumns = widthPixels/stepPixels;
 var curSpell;
 var arrowList = [];
+character.moveUp;
+character.moveDown;
+character.moveRight;
+character.moveLeft;
 
 function initializeGame() {
 	addToLivingEntities(character);
@@ -106,19 +110,22 @@ function drawPlayer(x,y){
 }
 
 //function that checks for arrow key presses
-document.onkeydown = checkKey;
-function checkKey(e) {
+document.onkeydown = function(e) {
 
 	e = e || window.event;
 
 	if (e.keyCode == '38') {// up arrow
-		move("up");
+		//move("up");
+		if(!character.moveDown){character.moveUp = true;}
 	}else if (e.keyCode == '40') {// down arrow
-		move("down");
+		//move("down");
+		if(!character.moveUp){character.moveDown=true;}
 	}else if (e.keyCode == '37') {// left arrow
-		move("left");
+		//move("left"); 
+		if(!character.moveRight){character.moveLeft=true;} 
 	}else if (e.keyCode == '39') {// right arrow
-		move("right");
+		//move("right"); //original I am replacing
+		if(!character.moveLeft){character.moveRight=true;} //first try at replacing, only works if i figure out onKeyUp()
 	}else if (e.keyCode == '66') {// B key
 		useRune();
 		unshield();
@@ -139,6 +146,21 @@ function checkKey(e) {
 	}else if(e.keyCode == '68') { // D key
 		shield();
 	}
+}
+
+document.onkeyup = function(e){
+	e = e || window.event;
+
+	if (e.keyCode == '38') {// up arrow
+		character.moveUp = false;
+	}else if (e.keyCode == '40') {// down arrow
+		character.moveDown = false;
+	}else if (e.keyCode == '37') {// left arrow
+		character.moveLeft = false;
+	}else if (e.keyCode == '39') {// right arrow
+		character.moveRight = false;
+	}
+
 }
 
 function shield(){
@@ -190,119 +212,119 @@ function useCoal() {
 
 //function that handles arrow key presses
 function move(direction){
-	if ((trapActive) && ((xPos - trapXPos <= 30) || (trapXPos - xPos >= 30)) && ((yPos - trapYPos <= 30) || (trapYPos - yPos >= 30))) {
-		character.health -= (character.maxHealth/4);
-		if(character.health <= 0){
-			window.location.href = "gameOver.html";
-		}
-		trapActive = false;
-		document.getElementById("healthBar").setAttribute("value",100*(character.health/character.maxHealth));
-	}
-	if (livingEntities.length == 1)	{
-		//top door
-		//630 - 750
-		//10
-		if ((xPos >= 630  && xPos <= 750) && yPos == 10) {
-			loadNewRoom();
-			spawnSide = "top";
-		}
-		//left door
-		//10
-		//310 - 430
-		else if ((yPos >= 310  && yPos <= 430) && xPos == 10) {
-			loadNewRoom();
-			spawnSide = "left";
-		}
-		//right door
-		//1370
-		//310 - 430
-		else if ((yPos >= 310  && yPos <= 430) && xPos == 1370) {
-			loadNewRoom();
-			spawnSide = "right";
-		}
-		//bottom door
-		//630 - 750
-		//650
-		else if ((xPos >= 630  && xPos <= 750) && yPos == 650) {
-			loadNewRoom();
-			spawnSide = "bottom";
-		}
-		updateStartPos(spawnSide);
-	}
+	// if ((trapActive) && ((xPos - trapXPos <= 30) || (trapXPos - xPos >= 30)) && ((yPos - trapYPos <= 30) || (trapYPos - yPos >= 30))) {
+	// 	character.health -= (character.maxHealth/4);
+	// 	if(character.health <= 0){
+	// 		window.location.href = "gameOver.html";
+	// 	}
+	// 	trapActive = false;
+	// 	document.getElementById("healthBar").setAttribute("value",100*(character.health/character.maxHealth));
+	// }
+	// if (livingEntities.length == 1)	{
+	// 	//top door
+	// 	//630 - 750
+	// 	//10
+	// 	if ((xPos >= 630  && xPos <= 750) && yPos == 10) {
+	// 		loadNewRoom();
+	// 		spawnSide = "top";
+	// 	}
+	// 	//left door
+	// 	//10
+	// 	//310 - 430
+	// 	else if ((yPos >= 310  && yPos <= 430) && xPos == 10) {
+	// 		loadNewRoom();
+	// 		spawnSide = "left";
+	// 	}
+	// 	//right door
+	// 	//1370
+	// 	//310 - 430
+	// 	else if ((yPos >= 310  && yPos <= 430) && xPos == 1370) {
+	// 		loadNewRoom();
+	// 		spawnSide = "right";
+	// 	}
+	// 	//bottom door
+	// 	//630 - 750
+	// 	//650
+	// 	else if ((xPos >= 630  && xPos <= 750) && yPos == 650) {
+	// 		loadNewRoom();
+	// 		spawnSide = "bottom";
+	// 	}
+	// 	updateStartPos(spawnSide);
+	// }
 	
-	if (stairsActive) {
-		//left
-		//1280
-		//0 - 90
-		if ((yPos >= 0  && yPos <= 90) && xPos == 1280) {
-			loadNewRoom();
-			spawnSide = "top";
-			floor++;
-			stairsActive = false;
-		}
-		//bottom
-		//1290 - 1380
-		//100
-		else if ((xPos >= 1290  && xPos <= 1380) && yPos == 100) {
-			loadNewRoom();
-			spawnSide = "left";
-			floor++;
-			stairsActive = false;
-		}
-	}
+	// if (stairsActive) {
+	// 	//left
+	// 	//1280
+	// 	//0 - 90
+	// 	if ((yPos >= 0  && yPos <= 90) && xPos == 1280) {
+	// 		loadNewRoom();
+	// 		spawnSide = "top";
+	// 		floor++;
+	// 		stairsActive = false;
+	// 	}
+	// 	//bottom
+	// 	//1290 - 1380
+	// 	//100
+	// 	else if ((xPos >= 1290  && xPos <= 1380) && yPos == 100) {
+	// 		loadNewRoom();
+	// 		spawnSide = "left";
+	// 		floor++;
+	// 		stairsActive = false;
+	// 	}
+	// }
 	
 	facing=direction;
 	// alert(clearPath("down"));
 	if(!paused){
 		unshield();
 		if(direction=="right" && clearPath(character, direction)){ //&& xPos!=1370
-			ctx.clearRect(xPos-1,yPos-1,character.width+2,character.height+2);
-			drawPlayer(xPos+stepPixels,yPos);
-			xPos+=stepPixels;
+			// ctx.clearRect(xPos-1,yPos-1,character.width+2,character.height+2);
+			// drawPlayer(xPos+stepPixels,yPos);
+			xPos+=1;
 		}
 		else if(direction=="left" && clearPath(character, direction)){ //&& xPos!=stepPixels 
-			ctx.clearRect(xPos-1,yPos-1,character.width+2,character.height+2);
-			drawPlayer(xPos-stepPixels,yPos);
-			xPos-=stepPixels;
+			// ctx.clearRect(xPos-1,yPos-1,character.width+2,character.height+2);
+			// drawPlayer(xPos-stepPixels,yPos);
+			xPos-=1;
 		}
 		else if(direction=="down" && clearPath(character, direction)){ //&& yPos!=640
-			ctx.clearRect(xPos-1,yPos-1,character.width+2,character.height+2);
-			drawPlayer(xPos,yPos+stepPixels);
-			yPos+=stepPixels;
+			// ctx.clearRect(xPos-1,yPos-1,character.width+2,character.height+2);
+			// drawPlayer(xPos,yPos+stepPixels);
+			yPos+=1;
 		}
 		else if(direction=="up" && clearPath(character, direction)){ //&& yPos!=stepPixels
-			ctx.clearRect(xPos-1,yPos-1,character.width+2,character.height+2);
-			drawPlayer(xPos,yPos-stepPixels);
-			yPos-=stepPixels;
+			// ctx.clearRect(xPos-1,yPos-1,character.width+2,character.height+2);
+			// drawPlayer(xPos,yPos-stepPixels);
+			yPos-=1;
 		}
 		//drawHealthBar(enemyAdjacent("up"));
 		character.position=[xPos,yPos]
 	}
-	if((xPos+yPos)%500===0) {
-		let randN = Math.floor(Math.random() * 3);
-		if (randN == 0) {
-			/*
-			let randN = Math.floor(Math.random() * 3);
-			if (randN == 0) {
-				addToInventory("Algiz rune");   //This will damage everything in the room
-			}
-			else if (randN == 1) {
-				addToInventory("Mannaz rune");  //This will double the amount of gold the character can hold
-			}
-			else {
-				addToInventory("Dagaz rune");   //This will full heal the characters health and mana
-			}
-			*/
-		}
-		else if (randN == 1) {
-			character.healthPotions++;
-		}
-		else {
-			character.manaPotions++;
-		}
-	}
-	collectObjects();
-	drawInventoryMap();
+	// if((xPos+yPos)%500===0) {
+	// 	let randN = Math.floor(Math.random() * 3);
+	// 	if (randN == 0) {
+	// 		/*
+	// 		let randN = Math.floor(Math.random() * 3);
+	// 		if (randN == 0) {
+	// 			addToInventory("Algiz rune");   //This will damage everything in the room
+	// 		}
+	// 		else if (randN == 1) {
+	// 			addToInventory("Mannaz rune");  //This will double the amount of gold the character can hold
+	// 		}
+	// 		else {
+	// 			addToInventory("Dagaz rune");   //This will full heal the characters health and mana
+	// 		}
+	// 		*/
+	// 	}
+	// 	else if (randN == 1) {
+	// 		character.healthPotions++;
+	// 	}
+	// 	else {
+	// 		character.manaPotions++;
+	// 	}
+	// }
+	//collectObjects();
+	//drawInventoryMap();
 }
 
 function collectObjects() {
@@ -929,12 +951,22 @@ function pause(){
 							}
 							enemyAttack();
 						}
-						else{
-							enemyMove(livingEntities[i]);
-						}
+						// else{
+						// 	enemyMove(livingEntities[i]);
+						// }
 					}
 				}
 			}
+			if(q%3 == 0){ //this affects the speed of movement
+				updateEnemyLocations();
+			}
+			if(q%2 == 0){
+				updateCharacterLocation(); //affects character speed
+			}
+			if(q%2 == 0){ //this affects refresh rate
+				updateScreen();
+			}
+
 			updateArrows();
 			if(character.health <= 0){
 				window.location.href = "gameOver.html";
@@ -948,12 +980,39 @@ function pause(){
 	}
 }
 
+function updateEnemyLocations(){
+	for(var i = 0; i <livingEntities.length; i++){
+		enemyMove(livingEntities[i]);
+	}
+}
+
+function updateCharacterLocation(){
+	if(character.moveUp){move("up");}
+	if(character.moveDown){move("down");}
+	if(character.moveLeft){move("left");}
+	if(character.moveRight){move("right");}
+}
+
+function updateScreen(){
+	ctx.clearRect(0,0, canvas.width, canvas.height);
+	//alert("clear rect");
+	for(var i = 0; i < livingEntities.length;i++){
+		if(livingEntities[i]==character){
+			drawPlayer(character.position[0], character.position[1]);
+		}else{
+			drawEnemy(livingEntities[i].position[0],livingEntities[i].position[1],livingEntities[i]);
+			drawHealthBar(livingEntities[i]);
+		}
+	}
+	drawInventoryMap();
+}
+
 function updateArrows(){
 	for(var i = 0; i < arrowList.length;i++){
 		var r =  5;
 		var theta = Math.atan2(arrowList[i][3]-arrowList[i][1],arrowList[i][2]-arrowList[i][0]);
 		
-		ctx.clearRect(arrowList[i][0],arrowList[i][1],-(r * Math.cos(theta)),-(r * Math.sin(theta)));
+		//ctx.clearRect(arrowList[i][0],arrowList[i][1],-(r * Math.sin(theta)),-(r * Math.cos(theta)));
 		
 		ctx.moveTo(arrowList[i][0], arrowList[i][1]);
 
@@ -1021,28 +1080,28 @@ function enemyMove(enemy){
 		}
 	}
 	if(direction=="right" && clearPath(enemy, direction)){ //change clear path function to accept a 2nd parameter of entity, so that clear path checks per user/enemy
-		ctx.clearRect(enemy.position[0]-1,enemy.position[1]-1,enemy.width+2,enemy.height+6);//added -1,-1,+2 and changed +4 to +6
-		drawEnemy(enemy.position[0]+10,enemy.position[1], enemy);
-		enemy.position[0]+=stepPixels;
-		drawHealthBar(enemy);
+		// ctx.clearRect(enemy.position[0]-1,enemy.position[1]-1,enemy.width+2,enemy.height+6);//added -1,-1,+2 and changed +4 to +6
+		// drawEnemy(enemy.position[0]+10,enemy.position[1], enemy);
+		enemy.position[0]+=1;
+		//drawHealthBar(enemy);
 	}
 	else if(direction=="left" && clearPath(enemy, direction)){
-		ctx.clearRect(enemy.position[0]-1,enemy.position[1]-1,enemy.width+2,enemy.height+6);//added -1,-1,+2 and changed +4 to +6
-		drawEnemy(enemy.position[0]-10,enemy.position[1], enemy);
-		enemy.position[0]-=stepPixels;
-		drawHealthBar(enemy);
+		// ctx.clearRect(enemy.position[0]-1,enemy.position[1]-1,enemy.width+2,enemy.height+6);//added -1,-1,+2 and changed +4 to +6
+		// drawEnemy(enemy.position[0]-10,enemy.position[1], enemy);
+		enemy.position[0]-=1;
+		//drawHealthBar(enemy);
 	}
 	else if(direction=="down" && clearPath(enemy, direction)){
-		ctx.clearRect(enemy.position[0]-1,enemy.position[1]-1,enemy.width+2,enemy.height+6);//added -1,-1,+2 and changed +4 to +6
-		drawEnemy(enemy.position[0],enemy.position[1]+10, enemy);
-		enemy.position[1]+=stepPixels;
-		drawHealthBar(enemy);
+		// ctx.clearRect(enemy.position[0]-1,enemy.position[1]-1,enemy.width+2,enemy.height+6);//added -1,-1,+2 and changed +4 to +6
+		// drawEnemy(enemy.position[0],enemy.position[1]+10, enemy);
+		enemy.position[1]+=1;
+		//drawHealthBar(enemy);
 	}
 	else if(direction=="up" && clearPath(enemy, direction)){
-		ctx.clearRect(enemy.position[0]-1,enemy.position[1]-1,enemy.width+2,enemy.height+6);//added -1,-1,+2 and changed +4 to +6
-		drawEnemy(enemy.position[0],enemy.position[1]-10, enemy);
-		enemy.position[1]-=stepPixels;
-		drawHealthBar(enemy);
+		// ctx.clearRect(enemy.position[0]-1,enemy.position[1]-1,enemy.width+2,enemy.height+6);//added -1,-1,+2 and changed +4 to +6
+		// drawEnemy(enemy.position[0],enemy.position[1]-10, enemy);
+		enemy.position[1]-=1;
+		//drawHealthBar(enemy);
 	}
 }
 
